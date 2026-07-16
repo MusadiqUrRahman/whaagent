@@ -1,5 +1,6 @@
 """MCP provider: injectable MCP client and session-scoped tools for agents."""
 
+import asyncio
 import logging
 import os
 from contextlib import asynccontextmanager
@@ -86,9 +87,40 @@ class MCPProvider:
     async def get_tools(self) -> List[Any]:
         """Return LangChain tools from configured server(s). Cached after first call.
         Leaves connections open; use tool_session() in CLI so connections close.
+
+        Connections that fail or time out are skipped gracefully — the agent
+        continues with whatever tools loaded successfully.
         """
-        if self._tools_cache is None:
-            self._tools_cache = await self._client.get_tools()
+        if self._tools_cache is not None:
+            return self._tools_cache
+
+        CONN_TIMEOUT = 5
+        all_tools: List[Any] = []
+
+        for name in self._config:
+            try:
+                logger.debug("Connecting to MCP server: %s", name)
+                async with asyncio.timeout(CONN_TIMEOUT):
+                    async with self._client.session(name) as session:
+                        tools = await load_mcp_tools(
+                            session,
+                            callbacks=self._client.callbacks,
+                            tool_interceptors=self._client.tool_interceptors,
+                            server_name=name,
+                            tool_name_prefix=self._client.tool_name_prefix,
+                        )
+                        logger.info("Loaded %d tools from MCP server: %s", len(tools), name)
+                        all_tools.extend(tools)
+            except (asyncio.TimeoutError, TimeoutError):
+                logger.warning("MCP server '%s' unavailable (timeout after %ds)", name, CONN_TIMEOUT)
+            except Exception as e:
+                error_detail = str(e)
+                if hasattr(e, "exceptions") and e.exceptions:
+                    sub_errors = [f"{type(sub).__name__}: {sub}" for sub in e.exceptions]
+                    error_detail = f"{error_detail} — sub-exceptions: {sub_errors}"
+                logger.warning("MCP server '%s' unavailable: %s", name, error_detail)
+
+        self._tools_cache = all_tools
         return self._tools_cache
 
     @asynccontextmanager
@@ -108,7 +140,7 @@ class MCPProvider:
         import logging
         from contextlib import AsyncExitStack
 
-        CONN_TIMEOUT = 60
+        CONN_TIMEOUT = 5
         all_tools = []
         failed_servers = []
 

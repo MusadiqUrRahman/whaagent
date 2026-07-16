@@ -1,510 +1,226 @@
 <div align="center">
 
-# 🎩 whaagent
-**Multi-tenant WhatsApp AI platform.**
+# WhaAgent
 
-[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue?style=plastic&logo=python&logoColor=white)](https://python.org)
-[![LangChain](https://img.shields.io/badge/langchain-%23007BA7.svg?style=plastic&logo=langchain&logoColor=white)](https://python.langchain.com/)
-[![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green?style=plastic&logo=modelcontextprotocol&logoColor=white)](https://modelcontextprotocol.io/)
-[![License](https://img.shields.io/github/license/MusadiqUrRahman/whaagent?style=plastic)](LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/MusadiqUrRahman/whaagent/ci.yml?style=plastic&logo=github&label=Build)](https://github.com/MusadiqUrRahman/whaagent/actions)
-[![Coverage](https://img.shields.io/badge/coverage-80%25-brightgreen?style=plastic)](https://github.com/MusadiqUrRahman/whaagent)
+**Production-grade multi-tenant WhatsApp AI platform**
 
-<br>
-
-**Production-ready WhatsApp integration** with Go gateway reliability and Python agent flexibility.
-
-Connect multiple WhatsApp numbers, deploy AI agents, and scale effortlessly.
+[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Go 1.21+](https://img.shields.io/badge/go-1.21%2B-00ADD8?style=for-the-badge&logo=go&logoColor=white)](https://go.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![LangGraph](https://img.shields.io/badge/LangGraph-FF0000?style=for-the-badge)](https://github.com/langchain-ai/langgraph)
+[![License](https://img.shields.io/github/license/MusadiqUrRahman/whaagent?style=for-the-badge)](LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/MusadiqUrRahman/whaagent/ci.yml?style=for-the-badge&logo=github&label=Build)](https://github.com/MusadiqUrRahman/whaagent/actions)
 
 </div>
 
 ---
 
-## 💡 Why whaagent?
-
-**Enterprise WhatsApp Integration**
-
-- **Multi-tenant by design**: Support multiple WhatsApp accounts (phone numbers) in a single deployment
-- **Go gateway reliability**: Built on whatsmeow with robust session management, LID-based JID support, and async event handling
-- **Python agent flexibility**: LangGraph-powered agents with 10+ LLM provider support
-- **Production features**: Persistent typing indicators, progress logging, session recovery
-
-**Developer Experience**
-
-- **5-line agents**: Create custom agents with `@AgentRegistry.register` decorator
-- **MCP native**: Model Context Protocol servers for live data access
-- **Flexible deployment**: Docker or bare metal (ideal for resource-constrained servers)
-- **Type-safe**: Full type hints with strict mypy checking
+WhaAgent connects AI agents to WhatsApp. Multiple numbers, multiple tenants, single deployment. Go gateway for protocol reliability, Python for agent flexibility, LangGraph for reasoning orchestration.
 
 ---
 
-## 🚀 Quick Start
-
-### Option 1: Docker
-
-```bash
-# Clone the repository
-git clone https://github.com/MusadiqUrRahman/whaagent.git
-cd whaagent
-
-# Start the platform
-docker compose up -d
-
-# View logs
-tail -f logs/whatsapp.log
-```
-
-### Option 2: Bare Metal (Local Development)
-
-**Requirements:**
-- Go 1.21+
-- Python 3.12+
-- `uv` package manager
-
-```bash
-# Install Python dependencies
-uv sync
-
-# Build Go gateway
-make gateway-build
-
-# Start Python API
-whaagent serve
-
-# In another terminal, start Go gateway
-cd gateway && go run .
-```
-
-### Authenticate with WhatsApp
-
-1. Open the QR code page: `http://localhost:8000/api/v1/whatsapp/qr/personal/page`
-2. Scan with WhatsApp (Settings > Linked Devices)
-3. Send yourself a message to test
-
-### Option 3: pip install
-
-```bash
-pip install whaagent
-whaagent init   # Interactive setup wizard
-```
-
-The init wizard walks you through everything:
-
-```
-╭─────────────────── whaagent Setup ───────────────────╮
-│ Welcome to whaagent!                                 │
-│ This wizard will set up your configuration.          │
-│ Press Enter to accept defaults shown in brackets.    │
-╰──────────────────────────────────────────────────────╯
-
- LLM provider (z.ai, openai, anthropic, google, ollama, openrouter) [z.ai]: openai
- Model name [gpt-4o-mini]:
- Temperature (0.0 = deterministic, 1.0 = creative) [0.1]:
- API key (will be written to .env): sk-••••••••••••
- Write credentials to .env? [Y/n]: Y
- Wrote OPENAI_API_KEY to .env
-
- Set up WhatsApp integration? (requires Go gateway binary) [y/N]: y
- Tenant ID (a short name, e.g. 'personal') [personal]:
- WhatsApp phone number (international format, e.g. +5511999999999): +5511999999999
- Default agent (assistant, developer, learning, news) [assistant]:
-
- Config written to ~/.whaagent.yaml
-```
-
-Then start chatting:
-
-```bash
-whaagent list                    # list available agents
-whaagent chat "Hello!"           # chat with the assistant
-```
-
-#### WhatsApp Gateway (optional)
-
-Download the pre-built binary for your platform from [GitHub Releases](https://github.com/MusadiqUrRahman/whaagent/releases/latest):
-
-```bash
-# Linux (amd64)
-curl -L -o whaagent-gateway https://github.com/MusadiqUrRahman/whaagent/releases/latest/download/whaagent-gateway-linux-amd64
-chmod +x whaagent-gateway
-
-# macOS (Apple Silicon)
-curl -L -o whaagent-gateway https://github.com/MusadiqUrRahman/whaagent/releases/latest/download/whaagent-gateway-darwin-arm64
-chmod +x whaagent-gateway
-
-# Start both services
-whaagent serve                   # Python API on port 8000
-./whaagent-gateway               # Go gateway (other terminal)
-
-# Scan the QR code to link your WhatsApp
-open http://localhost:8000/api/v1/whatsapp/qr/personal/page
-```
-
----
-
-## ⚙️ Configuration
-
-Create `.whaagent.yaml`:
-
-```yaml
-llm:
-  provider: anthropic  # or openai, google, ollama, etc.
-  model: claude-sonnet-4-6
-  temperature: 0.7
-
-api:
-  host: 127.0.0.1
-  port: 8000
-
-storage:
-  base_path: ~/.local/share/whaagent
-
-logging:
-  level: INFO
-  api_log: logs/api.log
-  whatsapp_log: logs/whatsapp.log
-
-auth:
-  api_keys:
-    "your-api-key": "admin"
-
-whatsapp:
-  tenants:
-    - id: personal
-      phone: "+34999888777"
-      default_agent: developer
-      allowed_contacts: []
-    - id: work
-      phone: "+15551234567"
-      default_agent: assistant
-      allowed_contacts:
-        - "+15559876543"
-```
-
-**Configuration Options:**
-
-| Option | Description |
-|--------|-------------|
-| `whatsapp.tenants` | List of WhatsApp accounts to manage |
-| `tenants[].id` | Unique tenant identifier |
-| `tenants[].phone` | Phone number in E.164 format |
-| `tenants[].default_agent` | Agent to use for messages from this tenant |
-| `tenants[].allowed_contacts` | Optional whitelist (empty = all contacts) |
-| `auth.api_keys` | API keys for gateway-to-API communication |
-
----
-
-## 🛠️ Create Custom Agents
-
-### The 5-Line Agent
-
-```python
-from whaagent import AgentBase, AgentRegistry
-
-@AgentRegistry.register("my-assistant", mcp_servers=["fetch"])
-class MyAssistant(AgentBase):
-    @property
-    def system_prompt(self) -> str:
-        return "You are a helpful assistant with web search access."
-```
-
-Deploy instantly — messages from your configured WhatsApp numbers will route to your agent.
-
-### Advanced: Custom Tools
-
-```python
-from langchain_core.tools import StructuredTool
-from whaagent import AgentBase, AgentRegistry
-
-@AgentRegistry.register("data-analyst")
-class DataAnalyst(AgentBase):
-    @property
-    def system_prompt(self) -> str:
-        return "You analyze CSV files and generate insights."
-
-    def local_tools(self) -> list:
-        return [
-            StructuredTool.from_function(
-                func=self.analyze_csv,
-                name="analyze_csv",
-                description="Analyze a CSV file and return statistics",
-            )
-        ]
-
-    def analyze_csv(self, filepath: str) -> str:
-        # Your analysis logic
-        return f"Analyzed {filepath}: found 1000 rows, 5 columns"
-```
-
----
-
-## 🏗️ Architecture
-
-### Multi-Tenant Platform
+## Architecture
 
 ```mermaid
-flowchart TB
-    subgraph User [👤 User]
-        Phone[WhatsApp Phone]
-        Browser[Web Browser - QR Page]
+flowchart LR
+    subgraph WhatsApp["WhatsApp Network"]
+        direction TB
+        U1["User A"]
+        U2["User B"]
+        U3["User C"]
     end
 
-    subgraph Gateway [🚪 Go Gateway]
-        SM[Session Manager]
-        MH[Message Handler]
-        QG[QR Generator]
-        HC[HTTP Client]
+    subgraph Gateway["Go Gateway · whatsmeow"]
+        direction TB
+        SM["Session Manager<br/>Multi-tenant"]
+        QR["QR Stream<br/>SSE"]
+        EH["Event Handler<br/>Async"]
     end
 
-    subgraph API [🌐 Python API]
-        FE[FastAPI Server]
-        WA[WhatsApp Routes]
-        AE[Agent Executor]
-        QR[SSE QR Stream]
+    subgraph API["Python API · FastAPI"]
+        direction TB
+        WH["Webhook Router"]
+        AP["Agent Pool<br/>LRU Eviction"]
+        CK["Checkpoint<br/>SQLite"]
     end
 
-    subgraph Agents [🤖 Agent Layer]
-        AB[AgentBase]
-        LG[LangGraph Runtime]
-        LT[Local Tools]
-        MT[MCP Tools]
+    subgraph Agents["Agent Layer · LangGraph"]
+        direction TB
+        R["Router Node<br/>Intent Classification"]
+        S["Summarize Node<br/>Context Compression"]
+        A["Agent Node<br/>Tool Orchestration"]
     end
 
-    subgraph External [🌍 External Services]
-        LLM[LLM Providers]
-        MCP[MCP Servers]
-        WA[WhatsApp Network]
+    subgraph Tools["Tool Ecosystem"]
+        direction TB
+        LT["Local Tools"]
+        MCP["MCP Servers"]
+        EXT["External APIs"]
     end
 
-    Phone <-->|WhatsApp Protocol| SM
-    SM --> MH
-    MH --> HC
-    HC --> FE
+    subgraph LLM["LLM Providers"]
+        direction TB
+        OAI["OpenAI"]
+        ANT["Anthropic"]
+        GGL["Google"]
+        OTH["10+ Providers"]
+    end
 
-    Browser -->|SSE| QR
-    QG --> QR
-    QR --> FE
+    U1 & U2 & U3 -->|"WhatsApp Protocol"| SM
+    SM --> EH
+    EH --> WH
+    QR -.->|"Scan to link"| WhatsApp
 
-    FE --> AE
-    AE --> AB
-    AB --> LG
-    AB --> LT
-    AB --> MT
+    WH --> AP
+    AP --> CK
+    CK --> S
+    S --> R
+    R --> A
+    A --> LT & MCP & EXT
+    A --> OAI & ANT & GGL & OTH
 
-    LG --> LLM
-    MT --> MCP
-
-    SM <-->|Multi-tenant| WA
-
-    classDef whatsapp fill:#25D366,color:#fff
-    classDef go fill:#00ADD8,color:#fff
-    classDef python fill:#3776AB,color:#fff
-    classDef llm fill:#9945FF,color:#fff
-
-    class WA whatsapp
-    class SM,MH,QG,HC go
-    class FE,WA,AE,QR python
-    class LLM llm
+    style WhatsApp fill:#25D366,color:#fff
+    style Gateway fill:#00ADD8,color:#fff
+    style API fill:#3776AB,color:#fff
+    style Agents fill:#9945FF,color:#fff
+    style Tools fill:#FF6B35,color:#fff
+    style LLM fill:#E91E63,color:#fff
 ```
 
-### Component Overview
-
-**Go Gateway** (`gateway/`):
-- **Multi-tenant**: Manage multiple WhatsApp accounts simultaneously
-- **Session persistence**: Sessions survive restarts via device reuse
-- **LID-based JID support**: Handles WhatsApp's Linked Identity Device format
-- **Async event handling**: Long LLM calls don't block message processing
-- **Typing indicator persistence**: Re-sends every 3s during LLM responses
-- **Progress logging**: INFO-level updates during long operations
-
-**Python API** (`src/whaagent/api/`):
-- **FastAPI server**: RESTful endpoints for agent execution
-- **WhatsApp webhooks**: Receive messages from Go gateway
-- **QR code streaming**: SSE for real-time QR code delivery
-- **Tenant isolation**: Separate agent instances per tenant
-- **API key auth**: Secure gateway-to-API communication
-
-**Agent Framework** (`src/whaagent/`):
-- **AgentBase**: LangGraph-powered base class with built-in tool management
-- **AgentRegistry**: Decorator-based registration with auto-discovery
-- **MCP integration**: Native Model Context Protocol support
-- **10+ LLM providers**: Anthropic, OpenAI, Google, Mistral, Ollama, etc.
-
 ---
 
-## 🧰 Available Integrations
+## System Design
 
-### Local Tools
+### Go Gateway
 
-Fast, zero-dependency tools for your agents:
+Built on [whatsmeow](https://github.com/tulir/whatsmeow) for direct WhatsApp protocol access.
 
-| Tool | Capability |
-|------|------------|
-| `find_files` | Fast file search via `fd` |
-| `discover_structure` | Directory tree mapping |
-| `get_file_outline` | AST signature parsing |
-| `read_file_fragment` | Precise file reading |
-| `code_search` | Fast code search via `ripgrep` |
-| `edit_file` | Safe file editing |
+- **Multi-tenant session management** — concurrent connections for multiple phone numbers
+- **LID-based JID resolution** — handles WhatsApp's Linked Identity Device format
+- **Async event pipeline** — long LLM calls don't block incoming message processing
+- **Persistent typing indicators** — re-sent every 3s during agent inference
+- **Session recovery** — survives restarts via device reuse
 
-### MCP Servers
+### Python API
 
-Extend your agents with Model Context Protocol servers:
+FastAPI server with dependency injection and async request handling.
 
-| Server | Purpose |
-|--------|---------|
-| `fetch` | Extract clean text from URLs |
-| `web-forager` | Web search and content fetching |
-| `kiwi-com-flight-search` | Real-time flight search |
+- **Tenant agent pool** — LRU eviction, per-tenant isolated instances
+- **SSE QR streaming** — real-time QR code delivery to browser
+- **API key authentication** — gateway-to-API security
+- **Health/readiness endpoints** — Kubernetes-ready probes
+- **Checkpoint persistence** — SQLite-backed conversation memory
 
-### LLM Providers
+### Agent Framework
 
-Support for 10+ providers covering 90%+ of the market:
+LangGraph-powered 3-node state graph.
 
-| Provider | Type | Use Case |
-|----------|------|----------|
-| **Anthropic** | Cloud | State-of-the-art reasoning (Claude) |
-| **OpenAI** | Cloud | GPT-4, GPT-4.1, o1 series |
-| **Azure OpenAI** | Cloud | Enterprise OpenAI deployments |
-| **Google GenAI** | Cloud | Gemini models via API |
-| **Google Vertex AI** | Cloud | Gemini models via GCP |
-| **Mistral AI** | Cloud | European privacy-focused models |
-| **Cohere** | Cloud | Enterprise RAG and Command models |
-| **AWS Bedrock** | Cloud | Anthropic, Titan, Meta via AWS |
-| **Ollama** | Local | Run LLMs locally (zero API cost) |
-| **Hugging Face** | Cloud | Open models from Hugging Face Hub |
-
----
-
-## 💻 CLI Reference
-
-```bash
-# Start the platform (Python API)
-whaagent serve
-
-# Start with custom config
-whaagent serve --config .whaagent.yaml
-
-# Start with custom host/port
-whaagent serve --host 0.0.0.0 --port 8080
-
-# Enable debug logging
-whaagent serve --log-level DEBUG
-
-# Check API health
-curl http://localhost:8000/health
-
-# View API logs
-tail -f logs/api.log
-
-# View gateway logs
-tail -f logs/whatsapp.log
+```
+Summarize → Router → Agent
 ```
 
-### API Endpoints
+- **Summarize node** — token threshold check, compresses old messages to ~128 tokens
+- **Router node** — LLM-classified intent (chat, tool_use, research, delegate)
+- **Agent node** — tool orchestration, sub-agent delegation, ReAct loop
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/health` | Health check |
-| `GET` | `/ready` | Readiness check |
-| `GET` | `/api/v1/whatsapp/qr/{tenant_id}` | SSE QR code stream |
-| `GET` | `/api/v1/whatsapp/qr/{tenant_id}/page` | HTML QR code viewer |
-| `POST` | `/api/v1/whatsapp/qr/{tenant_id}` | Receive QR from gateway |
-| `POST` | `/api/v1/whatsapp/status/{tenant_id}` | Connection status update |
-| `POST` | `/api/v1/channels/whatsapp/message` | Incoming message webhook |
+### Tool Ecosystem
+
+| Layer | Tools |
+|-------|-------|
+| **Local** | File operations, AST parsing, code search (ripgrep), syntax validation (tree-sitter) |
+| **MCP** | Model Context Protocol servers — web fetch, flight search, custom tools |
+| **Agent Invocation** | Cross-agent delegation with isolated execution contexts |
 
 ---
 
-## 🐳 Deployment Options
+## Tech Stack
 
-### Option 1: Docker
+| Component | Technology | Purpose |
+|-----------|-----------|---------|
+| Gateway | Go + whatsmeow | WhatsApp protocol, session management |
+| API | FastAPI + uvicorn | Async HTTP server, webhook handling |
+| Agents | LangGraph + LangChain | State graph, tool orchestration, memory |
+| Tools | tree-sitter, ripgrep | Code analysis, search |
+| MCP | Model Context Protocol | External tool integration |
+| Storage | SQLite | Checkpoint persistence, tenant data |
+| LLM | 10+ providers | OpenAI, Anthropic, Google, Ollama, etc. |
+| Testing | pytest + mypy + ruff | 80% coverage, strict types, lint |
 
-Best for development environments and teams wanting consistent, isolated deployments.
+---
+
+## Code Quality
+
+- **Type-safe** — strict mypy checking, full type hints across all modules
+- **Tested** — 80% coverage, unit + integration tests
+- **Linted** — ruff for style, mypy for types
+- **Async-first** — non-blocking I/O throughout
+- **Error handling** — graceful degradation, circuit breakers for external services
+
+---
+
+## Project Structure
+
+```
+whaagent/
+├── src/whaagent/
+│   ├── agents/              # Agent implementations
+│   │   ├── assistant.py     # General-purpose orchestrator
+│   │   ├── developer.py     # Code exploration
+│   │   ├── news.py          # News aggregation
+│   │   └── ...
+│   ├── api/
+│   │   ├── server.py        # FastAPI app factory
+│   │   ├── pool.py          # Tenant agent pool (LRU)
+│   │   └── routes/          # REST endpoints
+│   ├── graph.py             # 3-node StateGraph
+│   ├── agent.py             # AgentBase class
+│   ├── mcp/                 # MCP integration
+│   │   ├── provider.py      # Connection management
+│   │   └── config.py        # Server discovery
+│   ├── tools/               # Built-in tools
+│   │   ├── codebase_explorer.py
+│   │   ├── code_searcher.py
+│   │   └── manifest.py      # Tool manifest + circuit breaker
+│   ├── llm/                 # LLM abstraction
+│   │   └── providers.py     # 10+ provider factories
+│   ├── prompts/             # System prompts (.md)
+│   └── storage/             # SQLite persistence
+├── gateway/                 # Go WhatsApp gateway
+│   ├── main.go
+│   ├── session.go           # Multi-tenant sessions
+│   ├── message.go           # Message handling
+│   └── qr.go                # QR code generation
+└── tests/                   # Test suite
+```
+
+---
+
+## Deployment
 
 ```bash
-# Build the image
-make docker-build
-
-# Start all services
+# Docker
 docker compose up -d
 
-# View logs
-docker compose logs -f
-
-# Stop services
-docker compose down
-```
-
-**Docker Benefits:**
-
-- **Memory efficient**: Limited to 512MB
-- **Health checks**: Built-in monitoring endpoints
-- **Isolated environment**: Consistent across deployments
-- **Multi-stage build**: Optimized Go gateway + Python API
-
-### Option 2: Bare Metal
-
-Best for low-memory VPS (recommended for production on resource-constrained servers like Digital Ocean droplets).
-
-```bash
-# Install dependencies
-uv sync
-make gateway-build
-
-# Start Python API
-whaagent serve
-
-# In another terminal, start Go gateway
-cd gateway && go run .
-```
-
-**Bare Metal Benefits:**
-
-- **Lower memory footprint**: No Docker overhead (~100-200MB saved)
-- **Direct process management**: Fine-grained control with systemd or supervisord
-- **Faster startup**: No container initialization
-- **Easier debugging**: Direct access to logs and processes
-
----
-
-## 🧑‍💻 Development
-
-```bash
-# Install dependencies
-make install
-
-# Run tests
-make test
-
-# Run linting
-make check
-
-# Format code
-make format
-
-# Build packages
-make build
+# Bare metal
+uv sync && make gateway-build
+whaagent serve &
+cd gateway && go run . &
 ```
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for details.
+MIT
 
 ---
 
-<p align="center">
-  <strong>Built with:</strong><br>
-  <a href="https://python.langchain.com/"><img src="https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white" height="28" alt="LangChain"></a>
-  <a href="https://modelcontextprotocol.io/"><img src="https://img.shields.io/badge/MCP-Protocol-4B32C3?style=for-the-badge" height="28" alt="MCP"></a>
-  <a href="https://github.com/langchain-ai/langgraph"><img src="https://img.shields.io/badge/LangGraph-FF0000?style=for-the-badge" height="28" alt="LangGraph"></a>
-  <a href="https://go.dev/"><img src="https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white" height="28" alt="Go"></a>
-</p>
+<div align="center">
 
-<p align="center">
-  If you find this useful, please consider giving it a ⭐<br>
-  <a href="https://github.com/MusadiqUrRahman/whaagent/stargazers">
-    <img src="https://img.shields.io/github/stars/MusadiqUrRahman/whaagent?style=social&size=large" height="28" alt="Star">
-  </a>
-</p>
+[![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)](https://python.langchain.com)
+[![LangGraph](https://img.shields.io/badge/LangGraph-FF0000?style=for-the-badge)](https://github.com/langchain-ai/langgraph)
+[![Go](https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white)](https://go.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![MCP](https://img.shields.io/badge/MCP-4B32C3?style=for-the-badge)](https://modelcontextprotocol.io)
+
+</div>
