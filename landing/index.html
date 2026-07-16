@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>whaagent — Multi-Agent AI Framework for WhatsApp</title>
+  <meta name="description" content="Production-grade multi-agent orchestration. 12 specialized agents, graph-based routing, MCP tool integration — delivered through WhatsApp.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #09090b; color: #a1a1aa; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    ::selection { background: rgba(37, 211, 102, 0.2); color: #fff; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #09090b; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+
+    .terminal {
+      background: #0c0c0e;
+      border: 1px solid #27272a;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #27272a;
+    }
+    .terminal-dot { width: 10px; height: 10px; border-radius: 50%; background: #27272a; }
+    .terminal-dot.red { background: #ef4444; }
+    .terminal-dot.yellow { background: #eab308; }
+    .terminal-dot.green { background: #22c55e; }
+    .terminal-body { padding: 16px 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; }
+    .terminal-body .prompt { color: #25D366; }
+    .terminal-body .output { color: #71717a; }
+    .terminal-body .cmd { color: #fafafa; }
+
+    .whatsapp-mock {
+      background: #111114;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      overflow: hidden;
+      max-width: 400px;
+    }
+    .whatsapp-header {
+      background: #1a1a1e;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #27272a;
+    }
+    .whatsapp-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: white;
+      font-weight: 600;
+    }
+    .whatsapp-body { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .msg {
+      max-width: 82%;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .msg-in { background: #1c1c20; color: #d4d4d8; align-self: flex-start; border-bottom-left-radius: 2px; }
+    .msg-out { background: #005c4b; color: #e5e5e5; align-self: flex-end; border-bottom-right-radius: 2px; white-space: pre-line; }
+
+    .arch-flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .arch-node {
+      padding: 10px 20px;
+      border: 1px solid #27272a;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #d4d4d8;
+      background: #111114;
+      white-space: nowrap;
+    }
+    .arch-arrow {
+      width: 32px;
+      height: 1px;
+      background: #27272a;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .arch-arrow::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: -3px;
+      width: 0;
+      height: 0;
+      border-left: 5px solid #27272a;
+      border-top: 3px solid transparent;
+      border-bottom: 3px solid transparent;
+    }
+
+    .fade-in { opacity: 0; transform: translateY(12px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    a { color: inherit; text-decoration: none; }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #52525b;
+      font-weight: 500;
+    }
+
+    .agent-entry { border-bottom: 1px solid #18181b; padding: 12px 0; }
+    .agent-entry:last-child { border-bottom: none; }
+
+    @media (max-width: 768px) {
+      .arch-flow { flex-direction: column; gap: 0; }
+      .arch-arrow { width: 1px; height: 24px; background: #27272a; }
+      .arch-arrow::after { right: -3px; top: auto; bottom: -1px; border-left: 3px solid transparent; border-right: 3px solid transparent; border-top: 5px solid #27272a; border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(9,9,11,0.85);backdrop-filter:blur(12px);border-bottom:1px solid #18181b;">
+    <div class="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#25D366"/><path d="M17.5 14.5c-.3 0-.6-.1-.8-.2-.2-.1-.5-.2-.8-.1-.3.1-.6.4-.8.7-.3.4-.5.9-.7 1.1-.2.2-.3.2-.5.1-.2-.1-.7-.3-1.3-.6-.5-.3-.9-.5-1.1-.8-.2-.2-.2-.4-.1-.5.1-.2.3-.4.5-.7.2-.2.2-.4.3-.5.1-.2 0-.4 0-.5-.1-.2-.5-1.2-.7-1.6-.2-.4-.3-.4-.4-.4h-.4c-.1 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.5 2.3 3.7 3.2.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.2-.5 1.4-.9.2-.5.2-.9.1-1-.1-.1-.3-.2-.6-.3z" fill="white"/></svg>
+        <span class="text-white font-medium text-sm tracking-tight">whaagent</span>
+      </div>
+      <div class="hidden md:flex items-center gap-7 text-[13px] text-[#71717a]">
+        <a href="#architecture" class="hover:text-white transition-colors">Architecture</a>
+        <a href="#agents" class="hover:text-white transition-colors">Agents</a>
+        <a href="#quickstart" class="hover:text-white transition-colors">Quickstart</a>
+      </div>
+      <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="flex items-center gap-2 text-[13px] text-[#71717a] hover:text-white transition-colors">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </nav>
+
+  <section class="min-h-screen flex items-center pt-14">
+    <div class="max-w-5xl mx-auto px-6 py-24 w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div>
+          <div class="fade-in mb-5">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium" style="background:rgba(37,211,102,0.1);color:#25D366;">
+              <span class="w-1.5 h-1.5 rounded-full" style="background:#25D366;"></span>
+              Open source
+            </span>
+          </div>
+          <h1 class="fade-in text-[38px] md:text-[50px] leading-[1.1] tracking-[-0.03em] text-white mb-5" style="font-weight:300;">
+            Multi-agent AI,<br>delivered through<br>WhatsApp.
+          </h1>
+          <p class="fade-in text-[15px] leading-relaxed text-[#71717a] mb-8 max-w-md">
+            A production framework for building conversational AI systems. Graph-based routing, MCP tool integration, and 12 specialized agents running on your infrastructure.
+          </p>
+          <div class="fade-in flex flex-wrap items-center gap-3">
+            <a href="#quickstart" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-[13px] font-medium text-white" style="background:#25D366;">
+              Get started
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+            </a>
+            <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md text-[13px] font-medium text-[#a1a1aa] border border-[#27272a] hover:border-[#3f3f46] hover:text-white transition-colors">
+              View on GitHub
+            </a>
+          </div>
+        </div>
+        <div class="fade-in">
+          <div class="whatsapp-mock">
+            <div class="whatsapp-header">
+              <div class="whatsapp-avatar">W</div>
+              <div>
+                <div class="text-white text-[13px] font-medium">Whaagent Bot</div>
+                <div class="text-[#71717a] text-[11px]">online</div>
+              </div>
+            </div>
+            <div class="whatsapp-body">
+              <div class="msg msg-in">Summarize the latest AI news for me</div>
+              <div class="msg msg-out">Here are the top stories today:
+
+1. OpenAI released GPT-5.4 with improved reasoning benchmarks (+12% on MMLU).
+
+2. Anthropic announced Claude Opus 4.7 with 200k context window.
+
+3. Google DeepMind published a paper on multi-agent coordination achieving SOTA on WebArena.</div>
+              <div class="msg msg-in">Create a PR review for the latest commit</div>
+              <div class="msg msg-out">Reviewing commit abc1234...
+
+2 suggestions found:
+- auth.py:42 — constant-time comparison for token validation
+- pool.py:89 — TTL-based fallback for LRU eviction
+
+Overall: Clean. No critical issues.</div>
+            </div>
+          </div>
+          <div class="terminal mt-4">
+            <div class="terminal-header">
+              <div class="terminal-dot red"></div>
+              <div class="terminal-dot yellow"></div>
+              <div class="terminal-dot green"></div>
+              <span class="text-[11px] text-[#52525b] ml-2 font-mono">Terminal</span>
+            </div>
+            <div class="terminal-body">
+              <div><span class="prompt">$</span> <span class="cmd">whaagent list</span></div>
+              <div class="output">12 registered agents</div>
+              <div class="mt-2"><span class="prompt">$</span> <span class="cmd">whaagent chat "Hello" -a assistant</span></div>
+              <div class="output">Provider: openrouter | Agent: assistant</div>
+              <div class="output">Response: Hello! I'm your AI assistant.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="architecture" class="py-24" style="border-top:1px solid #18181b;">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="mb-16">
+        <div class="section-label mb-3">Architecture</div>
+        <h2 class="text-[28px] md:text-[36px] text-white tracking-[-0.02em] mb-3" style="font-weight:300;">Three-node state graph.</h2>
+        <p class="text-[15px] text-[#71717a] max-w-lg">Summarize, Router, Agent. Token-aware compression, LLM-powered intent classification, and tool execution in a single directed graph.</p>
+      </div>
+      <div class="arch-flow mb-16">
+        <div class="arch-node">Summarize</div>
+        <div class="arch-arrow"></div>
+        <div class="arch-node">Router</div>
+        <div class="arch-arrow"></div>
+        <div class="arch-node">Agent</div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-0" style="border:1px solid #27272a;border-radius:8px;overflow:hidden;">
+        <div class="p-6" style="border-right:1px solid #27272a;">
+          <div class="text-[11px] text-[#52525b] uppercase tracking-wider mb-2 font-medium">Go Gateway</div>
+          <p class="text-[13px] text-[#a1a1aa] leading-relaxed">WhatsApp session management, QR code generation, WebSocket connection with automatic reconnection.</p>
+        </div>
+        <div class="p-6" style="border-right:1px solid #27272a;">
+          <div class="text-[11px] text-[#52525b] uppercase tracking-wider mb-2 font-medium">FastAPI Server</div>
+          <p class="text-[13px] text-[#a1a1aa] leading-relaxed">Multi-tenant agent pools with LRU eviction, keep-alive health checks, per-tenant isolation.</p>
+        </div>
+        <div class="p-6">
+          <div class="text-[11px] text-[#52525b] uppercase tracking-wider mb-2 font-medium">MCP Protocol</div>
+          <p class="text-[13px] text-[#a1a1aa] leading-relaxed">Model Context Protocol with circuit breaker resilience. Auto-discovers tools, graceful degradation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="agents" class="py-24" style="border-top:1px solid #18181b;">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="mb-12">
+        <div class="section-label mb-3">Agents</div>
+        <h2 class="text-[28px] md:text-[36px] text-white tracking-[-0.02em] mb-3" style="font-weight:300;">12 specialized agents.</h2>
+        <p class="text-[15px] text-[#71717a] max-w-lg">Each agent has its own system prompt, tool set, and MCP connections. The assistant agent orchestrates sub-agents via graph-based delegation.</p>
+      </div>
+      <div style="border:1px solid #27272a;border-radius:8px;overflow:hidden;">
+        <div class="grid grid-cols-1 md:grid-cols-2">
+          <div class="agent-entry px-6"><span class="text-white text-[13px] font-medium">assistant</span> <span class="text-[12px] text-[#52525b] ml-2">Generalist orchestrator</span></div>
+          <div class="agent-entry px-6"><span class="text-white text-[13px] font-medium">developer</span> <span class="text-[12px] text-[#52525b] ml-2">Code exploration and validation</span></div>
+          <div class="agent-entry px-6"><span class="text-white text-[13px] font-medium">committer</span> <span class="text-[12px] text-[#52525b] ml-2">Git commit automation</span></div>
+          <div class="agent-entry px-6"><span class="text-white text-[13px] font-medium">news</span> <span class="text-[12px] text-[#52525b] ml-2">English news aggregation</span></div>
+          <div class="agent-entry px-6"><span class="text-white text-[13px] font-medium">br-news</span> <span class="text-[12px] text-[#52525b] ml-2">Portuguese news</span></div>
+          <div class="agent-entry px-6"><span class="text-white text-[13px] font-medium">es-news</span> <span class="text-[12px] text-[#52525b] ml-2">Spanish news</span></div>
+          <div class="agent-entry px-6"><span class="text-white text-[13px] font-medium">learning</span> <span class="text-[12px] text-[#52525b] ml-2">Educational content</span></div>
+          <div class="agent-entry px-6"><span class="text-white text-[13px] font-medium">youtube</span> <span class="text-[12px] text-[#52525b] ml-2">Transcript extraction</span></div>
+          <div class="agent-entry px-6"><span class="text-white text-[13px] font-medium">github-pr-reviewer</span> <span class="text-[12px] text-[#52525b] ml-2">Pull request automation</span></div>
+          <div class="agent-entry px-6"><span class="text-white text-[13px] font-medium">paywall-remover</span> <span class="text-[12px] text-[#52525b] ml-2">Deep web scraping</span></div>
+          <div class="agent-entry px-6"><span class="text-white text-[13px] font-medium">ollama</span> <span class="text-[12px] text-[#52525b] ml-2">Local model backend</span></div>
+          <div class="agent-entry px-6"><span class="text-white text-[13px] font-medium">recipe</span> <span class="text-[12px] text-[#52525b] ml-2">Recipe generation</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="quickstart" class="py-24" style="border-top:1px solid #18181b;">
+    <div class="max-w-5xl mx-auto px-6">
+      <div class="mb-12">
+        <div class="section-label mb-3">Quickstart</div>
+        <h2 class="text-[28px] md:text-[36px] text-white tracking-[-0.02em] mb-3" style="font-weight:300;">Running in 60 seconds.</h2>
+      </div>
+      <div class="space-y-6">
+        <div>
+          <div class="text-[12px] text-[#52525b] uppercase tracking-wider mb-3 font-medium">Docker</div>
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dot red"></div>
+              <div class="terminal-dot yellow"></div>
+              <div class="terminal-dot green"></div>
+            </div>
+            <div class="terminal-body">
+              <div><span class="prompt">$</span> <span class="cmd">git clone https://github.com/MusadiqUrRahman/whaagent.git</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">cd whaagent && cp .env.example .env</span></div>
+              <div class="output"># add your API key to .env</div>
+              <div><span class="prompt">$</span> <span class="cmd">docker compose up -d</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">curl http://localhost:8000/health</span></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="text-[12px] text-[#52525b] uppercase tracking-wider mb-3 font-medium">Manual</div>
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dot red"></div>
+              <div class="terminal-dot yellow"></div>
+              <div class="terminal-dot green"></div>
+            </div>
+            <div class="terminal-body">
+              <div class="output"># Python 3.12, Go 1.21+</div>
+              <div><span class="prompt">$</span> <span class="cmd">uv sync</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">cd gateway && go build -o whaagent-gateway</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">whaagent serve</span></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="text-[12px] text-[#52525b] uppercase tracking-wider mb-3 font-medium">CLI</div>
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="terminal-dot red"></div>
+              <div class="terminal-dot yellow"></div>
+              <div class="terminal-dot green"></div>
+            </div>
+            <div class="terminal-body">
+              <div><span class="prompt">$</span> <span class="cmd">whaagent list</span></div>
+              <div class="output">12 registered agents</div>
+              <div class="mt-1"><span class="prompt">$</span> <span class="cmd">whaagent chat "Hello" -a assistant</span></div>
+              <div class="output">Agent responds via configured LLM provider</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="py-8" style="border-top:1px solid #18181b;">
+    <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2.5">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#25D366"/><path d="M17.5 14.5c-.3 0-.6-.1-.8-.2-.2-.1-.5-.2-.8-.1-.3.1-.6.4-.8.7-.3.4-.5.9-.7 1.1-.2.2-.3.2-.5.1-.2-.1-.7-.3-1.3-.6-.5-.3-.9-.5-1.1-.8-.2-.2-.2-.4-.1-.5.1-.2.3-.4.5-.7.2-.2.2-.4.3-.5.1-.2 0-.4 0-.5-.1-.2-.5-1.2-.7-1.6-.2-.4-.3-.4-.4-.4h-.4c-.1 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.5 2.3 3.7 3.2.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.2-.5 1.4-.9.2-.5.2-.9.1-1-.1-.1-.3-.2-.6-.3z" fill="white"/></svg>
+        <span class="text-[13px] text-[#52525b]">whaagent</span>
+      </div>
+      <div class="text-[13px] text-[#52525b]">
+        Built by <a href="https://github.com/MusadiqUrRahman" target="_blank" class="text-[#71717a] hover:text-white transition-colors">Musadiq</a>
+      </div>
+      <div class="flex items-center gap-5 text-[13px] text-[#52525b]">
+        <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="hover:text-white transition-colors">GitHub</a>
+        <a href="https://github.com/MusadiqUrRahman/whaagent/releases" target="_blank" class="hover:text-white transition-colors">Releases</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
