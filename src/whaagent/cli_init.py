@@ -191,9 +191,9 @@ def _print_next_steps(
     steps.extend(
         [
             "Gateway binary download:",
-            "  [link=https://github.com/jeancsil/whaagent/releases]https://github.com/jeancsil/whaagent/releases[/link]",
+            "  [link=https://github.com/MusadiqUrRahman/whaagent/releases]https://github.com/MusadiqUrRahman/whaagent/releases[/link]",
             "",
-            "Full docs: [link=https://github.com/jeancsil/whaagent#readme]README[/link]",
+            "Full docs: [link=https://github.com/MusadiqUrRahman/whaagent#readme]README[/link]",
         ]
     )
 
