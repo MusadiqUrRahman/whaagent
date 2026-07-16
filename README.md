@@ -6,9 +6,9 @@
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue?style=plastic&logo=python&logoColor=white)](https://python.org)
 [![LangChain](https://img.shields.io/badge/langchain-%23007BA7.svg?style=plastic&logo=langchain&logoColor=white)](https://python.langchain.com/)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green?style=plastic&logo=modelcontextprotocol&logoColor=white)](https://modelcontextprotocol.io/)
-[![License](https://img.shields.io/github/license/jeancsil/whaagent?style=plastic)](LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/jeancsil/whaagent/ci.yml?style=plastic&logo=github&label=Build)](https://github.com/jeancsil/whaagent/actions)
-[![Coverage](https://img.shields.io/badge/coverage-80%25-brightgreen?style=plastic)](https://github.com/jeancsil/whaagent)
+[![License](https://img.shields.io/github/license/MusadiqUrRahman/whaagent?style=plastic)](LICENSE)
+[![CI](https://img.shields.io/github/actions/workflow/status/MusadiqUrRahman/whaagent/ci.yml?style=plastic&logo=github&label=Build)](https://github.com/MusadiqUrRahman/whaagent/actions)
+[![Coverage](https://img.shields.io/badge/coverage-80%25-brightgreen?style=plastic)](https://github.com/MusadiqUrRahman/whaagent)
 
 <br>
 
@@ -44,7 +44,7 @@ Connect multiple WhatsApp numbers, deploy AI agents, and scale effortlessly.
 
 ```bash
 # Clone the repository
-git clone https://github.com/jeancsil/whaagent.git
+git clone https://github.com/MusadiqUrRahman/whaagent.git
 cd whaagent
 
 # Start the platform
@@ -121,15 +121,15 @@ whaagent chat "Hello!"           # chat with the assistant
 
 #### WhatsApp Gateway (optional)
 
-Download the pre-built binary for your platform from [GitHub Releases](https://github.com/jeancsil/whaagent/releases/latest):
+Download the pre-built binary for your platform from [GitHub Releases](https://github.com/MusadiqUrRahman/whaagent/releases/latest):
 
 ```bash
 # Linux (amd64)
-curl -L -o whaagent-gateway https://github.com/jeancsil/whaagent/releases/latest/download/whaagent-gateway-linux-amd64
+curl -L -o whaagent-gateway https://github.com/MusadiqUrRahman/whaagent/releases/latest/download/whaagent-gateway-linux-amd64
 chmod +x whaagent-gateway
 
 # macOS (Apple Silicon)
-curl -L -o whaagent-gateway https://github.com/jeancsil/whaagent/releases/latest/download/whaagent-gateway-darwin-arm64
+curl -L -o whaagent-gateway https://github.com/MusadiqUrRahman/whaagent/releases/latest/download/whaagent-gateway-darwin-arm64
 chmod +x whaagent-gateway
 
 # Start both services
@@ -504,7 +504,7 @@ This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for d
 
 <p align="center">
   If you find this useful, please consider giving it a ⭐<br>
-  <a href="https://github.com/jeancsil/whaagent/stargazers">
-    <img src="https://img.shields.io/github/stars/jeancsil/whaagent?style=social&size=large" height="28" alt="Star">
+  <a href="https://github.com/MusadiqUrRahman/whaagent/stargazers">
+    <img src="https://img.shields.io/github/stars/MusadiqUrRahman/whaagent?style=social&size=large" height="28" alt="Star">
   </a>
 </p>
