@@ -1,0 +1,16 @@
+# Audio Transcriber Configuration
+# This config file is used by the GroqAudioTranscriber for audio transcription
+
+# Audio transcription model (Groq Whisper models)
+model: "whisper-large-v3-turbo"  # Default: faster (~30-50ms)
+# Alternative models:
+# model: "whisper-large-v3"  # More accurate (~100-150ms)
+
+# Request timeout in seconds
+timeout: 60.0
+
+# Supported audio formats
+# .wav, .mp3, .ogg, .oga, .m4a, .webm, .flac, .wma
+
+# File size limit (Groq API limit)
+max_size_mb: 25

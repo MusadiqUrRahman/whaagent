@@ -1,0 +1,56 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: whaagent-app
+
+    # Memory limit of 512MB
+    mem_limit: 512m
+
+    # DNS configuration for reliable network resolution
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+
+    # Mount volumes for live code updates and persistent logs
+    volumes:
+      # Mount source code for live updates (no rebuild needed)
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./config:/app/config
+      - ./scripts:/app/scripts
+
+      # Mount logs directory for easy access from host
+      - ./logs:/app/logs
+
+      # Mount storage directory for persistent data
+      - ./storage:/app/storage
+
+      # Mount pyproject.toml in case you need to update dependencies
+      - ./pyproject.toml:/app/pyproject.toml
+      - ./uv.lock:/app/uv.lock
+
+      # Persist the cache here. This creates a persistent folder at this path INSIDE the container
+      - uv-cache:/root/.cache/uv
+      - venv-data:/app/.venv
+    environment:
+      - UV_LINK_MODE=copy
+
+    # Command to run both Go gateway and Python API
+    command: ["sh", "-c", "whaagent-gateway & whaagent serve"]
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    # Keep container running for interactive use (optional)
+    stdin_open: true
+    tty: true
+volumes:
+  uv-cache:
+  venv-data:
+    # Network mode (optional, use host network if needed)
+    # network_mode: "host"

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Pre-push hook: run same checks as CI so push only succeeds if workflow would pass.
+set -e
+
+cd "$(git rev-parse --show-toplevel)"
+
+echo "Running CI checks before push..."
+uv sync
+make check
+make test
+echo "All checks passed."

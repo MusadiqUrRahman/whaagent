@@ -1,0 +1,42 @@
+# WhatsApp Agent Configuration
+
+# Agent model configuration
+model: "claude-sonnet-4-6"  # or any supported model
+
+# MCP Servers (optional - overrides registry defaults)
+# By default, uses: web-fetch, duckduckgo-search
+# Set to empty list [] to disable MCP entirely
+# mcp_servers:
+#   - web-fetch
+#   - duckduckgo-search
+
+# Channel configuration
+channel:
+  type: "whatsapp"
+  storage_path: "~/storage/whatsapp"
+
+# Privacy and filtering
+privacy:
+  allowed_contact: "+34 666 666 666"  # Only process messages from this number
+  # Option: log_filtered_messages to file for debugging (default: false)
+  # log_filtered_messages: true
+
+# Feature flags
+features:
+  text_messages: true       # Enable text messages
+  media_messages: true       # Enable media (images, videos, documents, audio)
+  group_messages: false      # Enable group messages (disabled by default for privacy)
+  presence_updates: true      # Enable presence (online/typing status)
+  typing_indicators: true    # Send typing indicators when processing
+
+# whatsapp specific
+whatsapp_bridge:
+  auto_setup: true          # Auto-clone Go bridge on first run
+  auto_connect: true        # Auto-connect on startup
+  bridge_timeout_sec: 180   # Max wait for bridge startup
+  poll_interval_sec: 1      # Check for new messages every N seconds
+
+# Logging
+logging:
+  level: "INFO"              # DEBUG, INFO, WARNING, ERROR
+  file: "logs/agent.log"    # Log file location

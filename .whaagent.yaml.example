@@ -1,0 +1,100 @@
+# WhaAgent Configuration Example
+#
+# This file configures the core whaagent library (LLM, MCP servers, agent defaults).
+#
+# If you're using whaagent-whatsapp or another integration:
+#   - .whaagent.yaml     (this file) → Core library settings (LLM, MCP)
+#   - whatsapp.yaml      → Integration-specific settings (channel, privacy)
+#
+# Copy this file to:
+#   - ./.whaagent.yaml (project-specific, takes precedence)
+#   - ~/.whaagent.yaml (user-specific, used as fallback)
+#   - Or set WHAAGENT_CONFIG environment variable to point to a custom path
+#
+# Environment variables take precedence over this file.
+
+# LLM Provider Configuration
+llm:
+  # Provider is auto-detected from API keys, uncomment to force specific one
+  # provider: "openai"  # or "anthropic"
+
+  # Model name (uses provider defaults if not specified)
+  # OpenAI default: gpt-4o-mini
+  # Anthropic default: claude-sonnet-4-6
+  # model: "gpt-4o-mini"
+
+  # Temperature for LLM responses (0.0 - 2.0)
+  temperature: 0.1
+
+  # Maximum tokens for LLM responses
+  # max_tokens: 4096
+
+# Logging Configuration
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: "INFO"
+
+  # Log file path (logs to stdout if not set)
+  # file: "/var/log/whaagent/agent.log"
+
+  # Log directory for rotating logs
+  # directory: "/var/log/whaagent"
+
+# MCP (Model Context Protocol) Server Configuration
+mcp:
+  # Toolbox MCP server URL
+  # Can also be set via TOOLBOX_URL environment variable
+  toolbox_url: "http://localhost:8080/sse"
+
+  # MCP connection timeout in seconds
+  timeout: 60
+
+  # Additional MCP servers (merged with defaults from code)
+  servers:
+    # Example custom MCP server (uncomment to use)
+    # my-custom-server:
+    #   url: "http://localhost:9000/sse"
+    #   transport: "sse"
+    #   env:
+    #     API_KEY: "your-api-key"
+
+# Agent-Specific Configuration
+agents:
+  # Default agent name used in system prompts
+  default_agent_name: "Assistant"
+
+  # Directory containing agent-specific prompt templates
+  # prompts_dir: "./prompts"
+
+  # Custom system prompt template (applies to ALL agents)
+  # Uncomment to override agent defaults:
+  # system_prompt_template: |
+  #   You are a helpful assistant with access to various tools.
+  #   Always be concise and accurate in your responses.
+
+  # Path to file containing system prompt template
+  # system_prompt_file: "./my_custom_prompt.txt"
+
+# Per-Agent Model Configuration
+# Assign different LLM models to specific agents
+agent_models:
+  # Map agent names to model names
+  # assistant: "claude-sonnet-4-6"
+  # developer: "claude-haiku-4-5-20251001"
+  # committer: "gpt-4o-mini"
+
+  # Optional: Override models for specific graph nodes (router, executor, responder)
+  # This is useful for using cheaper/faster models for classification/responder nodes
+  # assistant_nodes:
+  #   router: "claude-haiku-4-5-20251001"
+  #   responder: "claude-haiku-4-5-20251001"
+
+# Circuit Breaker Configuration (via environment variables)
+# Controls behavior when toolbox is unavailable
+#   MANIFEST_CB_FAILURE_THRESHOLD=5    # Open circuit after N failures
+#   MANIFEST_CB_TIMEOUT=60              # Seconds before attempting recovery
+#   MANIFEST_CB_INITIAL_BACKOFF=1      # Initial backoff in seconds
+#   MANIFEST_CB_MAX_BACKOFF=30         # Maximum backoff in seconds
+#
+# MCP Fail-Fast Mode (via environment variable)
+#   MCP_FAIL_FAST=true  # Fail immediately instead of degraded mode

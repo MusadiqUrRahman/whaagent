@@ -1,0 +1,60 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(cd:*)",
+      "mcp__browser__puppeteer_navigate",
+      "mcp__browser__puppeteer_evaluate",
+      "mcp__browser__puppeteer_screenshot",
+      "mcp__duckduckgo__search",
+      "mcp__duckduckgo__jina_fetch",
+      "Bash(make check:*)",
+      "Bash(docker compose:*)",
+      "mcp__duckduckgo__duckduckgo_search",
+      "Skill(glm-plan-usage:usage-query)",
+      "Skill(glm-plan-usage:usage-query-skill)",
+      "mcp__fetch__fetch",
+      "Bash(uv run:*)",
+      "Bash(make test:*)",
+      "mcp__excalidraw__read_me",
+      "Bash(make:*)",
+      "Bash(grep:*)",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "Bash(uv sync:*)",
+      "Bash(git add:*)",
+      "Bash(cp:*)",
+      "Bash(git commit:*)",
+      "Bash(python3:*)",
+      "Bash(python:*)",
+      "Bash(uv add:*)",
+      "Bash(pytest:*)",
+      "Bash(go mod:*)",
+      "Bash(go get:*)",
+      "Bash(go test:*)",
+      "Bash(go build:*)",
+      "Bash(go vet:*)",
+      "Bash(go fmt:*)",
+      "Bash(go doc:*)",
+      "Bash(go list:*)",
+      "Bash(find tests:*)",
+      "WebSearch"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{ read -r json; f=$(echo \"$json\" | jq -r '.tool_input.file_path // .tool_response.filePath'); [[ \"$f\" == *.bak ]] && echo 'ERROR: Cannot edit .bak files' && exit 1; [[ \"$f\" == */.claude/worktrees/* ]] && echo 'ERROR: Cannot edit worktree files from main session' && exit 1; exit 0; }"
+          }
+        ]
+      }
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "context7"
+  ]
+}
