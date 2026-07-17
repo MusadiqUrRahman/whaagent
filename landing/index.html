@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +11,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.css">
   <link rel="stylesheet" href="styles.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['Geist Mono', 'JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            foreground: '#09090b',
+            muted: '#71717a',
+            accent: '#25D366',
+            card: '#f4f4f5',
+            border: '#e4e4e7',
+            background: '#fafafa',
+          },
+        },
+      },
+    }
+  </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #fafafa; color: #09090b; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
@@ -171,27 +191,23 @@
 <body>
 
   <!-- Navigation -->
-  <nav id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:var(--nav-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--nav-border);">
+  <nav id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:rgba(250,250,250,0.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid #e4e4e7;">
     <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
       <a href="#" class="flex items-center gap-2.5">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#25D366"/><path d="M17.5 14.5c-.3 0-.6-.1-.8-.2-.2-.1-.5-.2-.8-.1-.3.1-.6.4-.8.7-.3.4-.5.9-.7 1.1-.2.2-.3.2-.5.1-.2-.1-.7-.3-1.3-.6-.5-.3-.9-.5-1.1-.8-.2-.2-.2-.4-.1-.5.1-.2.3-.4.5-.7.2-.2.2-.4.3-.5.1-.2 0-.4 0-.5-.1-.2-.5-1.2-.7-1.6-.2-.4-.3-.4-.4-.4h-.4c-.1 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.5 2.3 3.7 3.2.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.2-.5 1.4-.9.2-.5.2-.9.1-1-.1-.1-.3-.2-.6-.3z" fill="white"/></svg>
-        <span class="font-semibold text-lg tracking-tight" style="color:var(--text-primary);">whaagent</span>
+        <span class="text-foreground font-semibold text-lg tracking-tight">whaagent</span>
       </a>
       <div class="hidden md:flex items-center gap-1">
-        <a href="#architecture" class="px-3 py-2 text-sm transition-colors rounded-lg" style="color:var(--text-muted);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'">Architecture</a>
-        <a href="#agents" class="px-3 py-2 text-sm transition-colors rounded-lg" style="color:var(--text-muted);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'">Agents</a>
-        <a href="#quickstart" class="px-3 py-2 text-sm transition-colors rounded-lg" style="color:var(--text-muted);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'">Quickstart</a>
+        <a href="#architecture" class="px-3 py-2 text-sm text-muted hover:text-foreground transition-colors rounded-lg">Architecture</a>
+        <a href="#agents" class="px-3 py-2 text-sm text-muted hover:text-foreground transition-colors rounded-lg">Agents</a>
+        <a href="#quickstart" class="px-3 py-2 text-sm text-muted hover:text-foreground transition-colors rounded-lg">Quickstart</a>
       </div>
       <div class="flex items-center gap-3">
-        <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="hidden sm:flex items-center gap-2 text-sm transition-colors" style="color:var(--text-muted);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-muted)'">
+        <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="hidden sm:flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
           GitHub
         </a>
-        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-        </button>
-        <a href="#quickstart" class="h-10 px-5 text-sm font-medium text-white rounded-full transition-all hover:shadow-lg hover:shadow-black/10 inline-flex items-center gap-2" style="background:var(--accent);">
+        <a href="#quickstart" class="h-10 px-5 text-sm font-medium text-white bg-foreground rounded-full hover:bg-foreground/85 transition-all hover:shadow-lg hover:shadow-black/10 inline-flex items-center gap-2">
           Get started
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
         </a>
@@ -207,22 +223,22 @@
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <div class="hero-content">
-          <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full backdrop-blur-sm text-sm font-medium mb-6" style="background:var(--bg-glass);border:1px solid var(--border-light);color:var(--accent);">
-            <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background:var(--accent);"></span>
+          <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-border/40 text-accent text-sm font-medium mb-6">
+            <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
             Open source
           </div>
-          <h1 class="reveal reveal-delay-1 text-[40px] md:text-[56px] lg:text-[64px] leading-[1.08] tracking-[-0.035em] mb-5" style="font-weight:600;color:var(--text-primary);">
+          <h1 class="reveal reveal-delay-1 text-[40px] md:text-[56px] lg:text-[64px] leading-[1.08] tracking-[-0.035em] text-foreground mb-5" style="font-weight:600;">
             Multi-agent AI,<br>delivered through<br>WhatsApp.
           </h1>
-          <p class="reveal reveal-delay-2 text-lg leading-relaxed mb-8 max-w-md" style="color:var(--text-secondary);">
+          <p class="reveal reveal-delay-2 text-lg text-muted leading-relaxed mb-8 max-w-md">
             A production framework for building conversational AI systems. Graph-based routing, MCP tool integration, and 12 specialized agents running on your infrastructure.
           </p>
           <div class="reveal reveal-delay-3 flex flex-wrap items-center gap-3">
-            <a href="#quickstart" class="cta-glow h-12 px-7 text-sm font-medium text-white rounded-full transition-all hover:shadow-lg hover:shadow-black/10 inline-flex items-center gap-2" style="background:var(--accent);">
+            <a href="#quickstart" class="cta-glow h-12 px-7 text-sm font-medium text-white bg-foreground rounded-full hover:bg-foreground/85 transition-all hover:shadow-lg hover:shadow-black/10 inline-flex items-center gap-2">
               Get started
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
             </a>
-            <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="h-12 px-7 text-sm font-medium backdrop-blur-sm rounded-full transition-all inline-flex items-center gap-2" style="color:var(--text-primary);background:var(--bg-glass);border:1px solid var(--border-color);">
+            <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="h-12 px-7 text-sm font-medium text-foreground bg-white/80 backdrop-blur-sm rounded-full border border-border hover:border-foreground/20 transition-all inline-flex items-center gap-2">
               View on GitHub
             </a>
           </div>
@@ -243,21 +259,21 @@
   <section class="py-12">
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="stat-card reveal" style="border:1px solid var(--border-color);border-radius:12px;padding:24px;text-align:center;">
-          <div class="text-3xl font-bold tracking-tight" style="color:var(--text-primary);">12</div>
-          <div class="text-sm mt-1" style="color:var(--text-muted);">Agents</div>
+        <div class="stat-card reveal">
+          <div class="text-3xl font-bold text-foreground tracking-tight">12</div>
+          <div class="text-sm text-muted mt-1">Agents</div>
         </div>
-        <div class="stat-card reveal reveal-delay-1" style="border:1px solid var(--border-color);border-radius:12px;padding:24px;text-align:center;">
-          <div class="text-3xl font-bold tracking-tight" style="color:var(--text-primary);">3</div>
-          <div class="text-sm mt-1" style="color:var(--text-muted);">Graph Nodes</div>
+        <div class="stat-card reveal reveal-delay-1">
+          <div class="text-3xl font-bold text-foreground tracking-tight">3</div>
+          <div class="text-sm text-muted mt-1">Graph Nodes</div>
         </div>
-        <div class="stat-card reveal reveal-delay-2" style="border:1px solid var(--border-color);border-radius:12px;padding:24px;text-align:center;">
-          <div class="text-3xl font-bold tracking-tight" style="color:var(--text-primary);">2</div>
-          <div class="text-sm mt-1" style="color:var(--text-muted);">Languages</div>
+        <div class="stat-card reveal reveal-delay-2">
+          <div class="text-3xl font-bold text-foreground tracking-tight">2</div>
+          <div class="text-sm text-muted mt-1">Languages</div>
         </div>
-        <div class="stat-card reveal reveal-delay-3" style="border:1px solid var(--border-color);border-radius:12px;padding:24px;text-align:center;">
-          <div class="text-3xl font-bold tracking-tight" style="color:var(--accent);">100%</div>
-          <div class="text-sm mt-1" style="color:var(--text-muted);">Open Source</div>
+        <div class="stat-card reveal reveal-delay-3">
+          <div class="text-3xl font-bold text-accent tracking-tight">100%</div>
+          <div class="text-sm text-muted mt-1">Open Source</div>
         </div>
       </div>
     </div>
@@ -266,7 +282,7 @@
   <!-- Video Showcase -->
   <section class="py-16">
     <div class="max-w-[1200px] mx-auto px-6">
-      <div class="reveal-scale video-glow relative rounded-2xl overflow-hidden" style="border:1px solid var(--border-color);box-shadow:0 12px 48px rgba(0,0,0,0.08);">
+      <div class="reveal-scale video-glow relative rounded-2xl overflow-hidden border border-border" style="box-shadow:0 12px 48px rgba(0,0,0,0.08);">
         <video autoplay muted loop playsinline class="w-full h-auto block" style="aspect-ratio:16/9;object-fit:cover;">
           <source src="video.mp4" type="video/mp4">
         </video>
@@ -280,8 +296,8 @@
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="reveal mb-16">
         <div class="section-eyebrow">Architecture</div>
-        <h2 class="text-3xl md:text-[40px] tracking-[-0.025em] mb-3 leading-[1.15]" style="color:var(--text-primary);">Three-node state graph.</h2>
-        <p class="text-lg max-w-lg leading-relaxed" style="color:var(--text-secondary);">Summarize, Router, Agent. Token-aware compression, LLM-powered intent classification, and tool execution in a single directed graph.</p>
+        <h2 class="text-3xl md:text-[40px] text-foreground tracking-[-0.025em] mb-3 leading-[1.15]">Three-node state graph.</h2>
+        <p class="text-lg text-muted max-w-lg leading-relaxed">Summarize, Router, Agent. Token-aware compression, LLM-powered intent classification, and tool execution in a single directed graph.</p>
       </div>
       <div class="reveal arch-flow mb-16">
         <div class="arch-node">Summarize</div>
@@ -291,52 +307,52 @@
         <div class="arch-node">Agent</div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="reveal reveal-delay-1 glass-card glow-card p-6" style="border:1px solid var(--border-light);border-radius:16px;">
-          <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4" style="background:var(--bg-card);border:1px solid var(--border-color);">
-            <svg class="w-5 h-5" style="color:var(--accent);" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z"/></svg>
+        <div class="reveal reveal-delay-1 glass-card glow-card p-6">
+          <div class="w-10 h-10 rounded-lg bg-card border border-border/40 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z"/></svg>
           </div>
-          <h3 class="text-sm font-semibold mb-1" style="color:var(--text-primary);">Go Gateway</h3>
-          <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">WhatsApp session management, QR code generation, WebSocket connection with automatic reconnection.</p>
+          <h3 class="text-sm font-semibold text-foreground mb-1">Go Gateway</h3>
+          <p class="text-sm text-muted leading-relaxed">WhatsApp session management, QR code generation, WebSocket connection with automatic reconnection.</p>
         </div>
-        <div class="reveal reveal-delay-2 glass-card glow-card p-6" style="border:1px solid var(--border-light);border-radius:16px;">
-          <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4" style="background:var(--bg-card);border:1px solid var(--border-color);">
-            <svg class="w-5 h-5" style="color:var(--accent);" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+        <div class="reveal reveal-delay-2 glass-card glow-card p-6">
+          <div class="w-10 h-10 rounded-lg bg-card border border-border/40 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
           </div>
-          <h3 class="text-sm font-semibold mb-1" style="color:var(--text-primary);">FastAPI Server</h3>
-          <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Multi-tenant agent pools with LRU eviction, keep-alive health checks, per-tenant isolation.</p>
+          <h3 class="text-sm font-semibold text-foreground mb-1">FastAPI Server</h3>
+          <p class="text-sm text-muted leading-relaxed">Multi-tenant agent pools with LRU eviction, keep-alive health checks, per-tenant isolation.</p>
         </div>
-        <div class="reveal reveal-delay-3 glass-card glow-card p-6" style="border:1px solid var(--border-light);border-radius:16px;">
-          <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-4" style="background:var(--bg-card);border:1px solid var(--border-color);">
-            <svg class="w-5 h-5" style="color:var(--accent);" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 00.659 1.591L19 14.5M14.25 3.104c.251.023.501.05.75.082M19 14.5l-2.47 2.47a2.25 2.25 0 01-.659 1.591v0a2.25 2.25 0 01-2.25 2.25H5.25a2.25 2.25 0 01-2.25-2.25v0a2.25 2.25 0 01.659-1.591L5 14.5m14 0V6.37a2.25 2.25 0 00-.659-1.591L15 3.104"/></svg>
+        <div class="reveal reveal-delay-3 glass-card glow-card p-6">
+          <div class="w-10 h-10 rounded-lg bg-card border border-border/40 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 00.659 1.591L19 14.5M14.25 3.104c.251.023.501.05.75.082M19 14.5l-2.47 2.47a2.25 2.25 0 01-.659 1.591v0a2.25 2.25 0 01-2.25 2.25H5.25a2.25 2.25 0 01-2.25-2.25v0a2.25 2.25 0 01.659-1.591L5 14.5m14 0V6.37a2.25 2.25 0 00-.659-1.591L15 3.104"/></svg>
           </div>
-          <h3 class="text-sm font-semibold mb-1" style="color:var(--text-primary);">MCP Protocol</h3>
-          <p class="text-sm leading-relaxed" style="color:var(--text-secondary);">Model Context Protocol with circuit breaker resilience. Auto-discovers tools, graceful degradation.</p>
+          <h3 class="text-sm font-semibold text-foreground mb-1">MCP Protocol</h3>
+          <p class="text-sm text-muted leading-relaxed">Model Context Protocol with circuit breaker resilience. Auto-discovers tools, graceful degradation.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Agents -->
-  <section id="agents" class="py-20 lg:py-28 section-glow" style="background:var(--bg-card);">
+  <section id="agents" class="py-20 lg:py-28 section-glow" style="background:white;">
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="reveal mb-12">
         <div class="section-eyebrow">Agents</div>
-        <h2 class="text-3xl md:text-[40px] tracking-[-0.025em] mb-3 leading-[1.15]" style="color:var(--text-primary);">12 specialized agents.</h2>
-        <p class="text-lg max-w-lg leading-relaxed" style="color:var(--text-secondary);">Each agent has its own system prompt, tool set, and MCP connections. The assistant agent orchestrates sub-agents via graph-based delegation.</p>
+        <h2 class="text-3xl md:text-[40px] text-foreground tracking-[-0.025em] mb-3 leading-[1.15]">12 specialized agents.</h2>
+        <p class="text-lg text-muted max-w-lg leading-relaxed">Each agent has its own system prompt, tool set, and MCP connections. The assistant agent orchestrates sub-agents via graph-based delegation.</p>
       </div>
       <div class="flex flex-wrap gap-3">
-        <div class="reveal reveal-delay-1 agent-pill" style="border:1px solid var(--border-color);border-radius:10px;padding:10px 16px;font-size:13px;"><span class="name" style="font-weight:500;">assistant</span><span class="desc">Generalist orchestrator</span></div>
-        <div class="reveal reveal-delay-1 agent-pill" style="border:1px solid var(--border-color);border-radius:10px;padding:10px 16px;font-size:13px;"><span class="name" style="font-weight:500;">developer</span><span class="desc">Code exploration and validation</span></div>
-        <div class="reveal reveal-delay-2 agent-pill" style="border:1px solid var(--border-color);border-radius:10px;padding:10px 16px;font-size:13px;"><span class="name" style="font-weight:500;">committer</span><span class="desc">Git commit automation</span></div>
-        <div class="reveal reveal-delay-2 agent-pill" style="border:1px solid var(--border-color);border-radius:10px;padding:10px 16px;font-size:13px;"><span class="name" style="font-weight:500;">news</span><span class="desc">English news aggregation</span></div>
-        <div class="reveal reveal-delay-3 agent-pill" style="border:1px solid var(--border-color);border-radius:10px;padding:10px 16px;font-size:13px;"><span class="name" style="font-weight:500;">br-news</span><span class="desc">Portuguese news</span></div>
-        <div class="reveal reveal-delay-3 agent-pill" style="border:1px solid var(--border-color);border-radius:10px;padding:10px 16px;font-size:13px;"><span class="name" style="font-weight:500;">es-news</span><span class="desc">Spanish news</span></div>
-        <div class="reveal reveal-delay-4 agent-pill" style="border:1px solid var(--border-color);border-radius:10px;padding:10px 16px;font-size:13px;"><span class="name" style="font-weight:500;">learning</span><span class="desc">Educational content</span></div>
-        <div class="reveal reveal-delay-4 agent-pill" style="border:1px solid var(--border-color);border-radius:10px;padding:10px 16px;font-size:13px;"><span class="name" style="font-weight:500;">youtube</span><span class="desc">Transcript extraction</span></div>
-        <div class="reveal reveal-delay-1 agent-pill" style="border:1px solid var(--border-color);border-radius:10px;padding:10px 16px;font-size:13px;"><span class="name" style="font-weight:500;">github-pr-reviewer</span><span class="desc">Pull request automation</span></div>
-        <div class="reveal reveal-delay-1 agent-pill" style="border:1px solid var(--border-color);border-radius:10px;padding:10px 16px;font-size:13px;"><span class="name" style="font-weight:500;">paywall-remover</span><span class="desc">Deep web scraping</span></div>
-        <div class="reveal reveal-delay-2 agent-pill" style="border:1px solid var(--border-color);border-radius:10px;padding:10px 16px;font-size:13px;"><span class="name" style="font-weight:500;">ollama</span><span class="desc">Local model backend</span></div>
-        <div class="reveal reveal-delay-2 agent-pill" style="border:1px solid var(--border-color);border-radius:10px;padding:10px 16px;font-size:13px;"><span class="name" style="font-weight:500;">recipe</span><span class="desc">Recipe generation</span></div>
+        <div class="reveal reveal-delay-1 agent-pill"><span class="name">assistant</span><span class="desc">Generalist orchestrator</span></div>
+        <div class="reveal reveal-delay-1 agent-pill"><span class="name">developer</span><span class="desc">Code exploration and validation</span></div>
+        <div class="reveal reveal-delay-2 agent-pill"><span class="name">committer</span><span class="desc">Git commit automation</span></div>
+        <div class="reveal reveal-delay-2 agent-pill"><span class="name">news</span><span class="desc">English news aggregation</span></div>
+        <div class="reveal reveal-delay-3 agent-pill"><span class="name">br-news</span><span class="desc">Portuguese news</span></div>
+        <div class="reveal reveal-delay-3 agent-pill"><span class="name">es-news</span><span class="desc">Spanish news</span></div>
+        <div class="reveal reveal-delay-4 agent-pill"><span class="name">learning</span><span class="desc">Educational content</span></div>
+        <div class="reveal reveal-delay-4 agent-pill"><span class="name">youtube</span><span class="desc">Transcript extraction</span></div>
+        <div class="reveal reveal-delay-1 agent-pill"><span class="name">github-pr-reviewer</span><span class="desc">Pull request automation</span></div>
+        <div class="reveal reveal-delay-1 agent-pill"><span class="name">paywall-remover</span><span class="desc">Deep web scraping</span></div>
+        <div class="reveal reveal-delay-2 agent-pill"><span class="name">ollama</span><span class="desc">Local model backend</span></div>
+        <div class="reveal reveal-delay-2 agent-pill"><span class="name">recipe</span><span class="desc">Recipe generation</span></div>
       </div>
     </div>
   </section>
@@ -346,11 +362,11 @@
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="reveal mb-12">
         <div class="section-eyebrow">Quickstart</div>
-        <h2 class="text-3xl md:text-[40px] tracking-[-0.025em] mb-3 leading-[1.15]" style="color:var(--text-primary);">Running in 60 seconds.</h2>
+        <h2 class="text-3xl md:text-[40px] text-foreground tracking-[-0.025em] mb-3 leading-[1.15]">Running in 60 seconds.</h2>
       </div>
       <div class="space-y-6">
         <div class="reveal">
-          <div class="text-xs uppercase tracking-wider mb-3 font-medium" style="color:var(--text-muted);">Docker</div>
+          <div class="text-xs text-muted uppercase tracking-wider mb-3 font-medium">Docker</div>
           <div class="terminal">
             <div class="terminal-header">
               <div class="terminal-dot red"></div>
@@ -367,7 +383,7 @@
           </div>
         </div>
         <div class="reveal">
-          <div class="text-xs uppercase tracking-wider mb-3 font-medium" style="color:var(--text-muted);">Manual</div>
+          <div class="text-xs text-muted uppercase tracking-wider mb-3 font-medium">Manual</div>
           <div class="terminal">
             <div class="terminal-header">
               <div class="terminal-dot red"></div>
@@ -383,7 +399,7 @@
           </div>
         </div>
         <div class="reveal">
-          <div class="text-xs uppercase tracking-wider mb-3 font-medium" style="color:var(--text-muted);">CLI</div>
+          <div class="text-xs text-muted uppercase tracking-wider mb-3 font-medium">CLI</div>
           <div class="terminal">
             <div class="terminal-header">
               <div class="terminal-dot red"></div>
@@ -405,14 +421,14 @@
   <!-- Final CTA -->
   <section class="py-20 lg:py-28 section-glow">
     <div class="max-w-[1200px] mx-auto px-6 text-center">
-      <h2 class="reveal text-3xl md:text-[40px] tracking-[-0.025em] mb-4 leading-[1.15]" style="font-weight:600;color:var(--text-primary);">Build conversational AI systems.</h2>
-      <p class="reveal reveal-delay-1 text-lg mb-8 max-w-md mx-auto leading-relaxed" style="color:var(--text-secondary);">Open source. Self-hosted. Multi-tenant. Deploy on your infrastructure in minutes.</p>
+      <h2 class="reveal text-3xl md:text-[40px] text-foreground tracking-[-0.025em] mb-4 leading-[1.15]" style="font-weight:600;">Build conversational AI systems.</h2>
+      <p class="reveal reveal-delay-1 text-lg text-muted mb-8 max-w-md mx-auto leading-relaxed">Open source. Self-hosted. Multi-tenant. Deploy on your infrastructure in minutes.</p>
       <div class="reveal reveal-delay-2 flex flex-wrap items-center justify-center gap-3">
-        <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="cta-glow h-12 px-7 text-sm font-medium text-white rounded-full transition-all hover:shadow-lg hover:shadow-black/10 inline-flex items-center gap-2" style="background:var(--accent);">
+        <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="cta-glow h-12 px-7 text-sm font-medium text-white bg-foreground rounded-full hover:bg-foreground/85 transition-all hover:shadow-lg hover:shadow-black/10 inline-flex items-center gap-2">
           View on GitHub
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
         </a>
-        <a href="https://github.com/MusadiqUrRahman/whaagent/releases" target="_blank" class="h-12 px-7 text-sm font-medium backdrop-blur-sm rounded-full transition-all inline-flex items-center gap-2" style="color:var(--text-primary);background:var(--bg-glass);border:1px solid var(--border-color);">
+        <a href="https://github.com/MusadiqUrRahman/whaagent/releases" target="_blank" class="h-12 px-7 text-sm font-medium text-foreground bg-white/80 backdrop-blur-sm rounded-full border border-border hover:border-foreground/20 transition-all inline-flex items-center gap-2">
           View Releases
         </a>
       </div>
@@ -420,37 +436,37 @@
   </section>
 
   <!-- Footer -->
-  <footer class="py-12" style="background:var(--bg-card);border-top:1px solid var(--border-color);">
+  <footer class="bg-foreground text-white py-12">
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-12">
         <div class="col-span-2 md:col-span-3 lg:col-span-2">
           <div class="flex items-center gap-2.5 mb-4">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#25D366"/><path d="M17.5 14.5c-.3 0-.6-.1-.8-.2-.2-.1-.5-.2-.8-.1-.3.1-.6.4-.8.7-.3.4-.5.9-.7 1.1-.2.2-.3.2-.5.1-.2-.1-.7-.3-1.3-.6-.5-.3-.9-.5-1.1-.8-.2-.2-.2-.4-.1-.5.1-.2.3-.4.5-.7.2-.2.2-.4.3-.5.1-.2 0-.4 0-.5-.1-.2-.5-1.2-.7-1.6-.2-.4-.3-.4-.4-.4h-.4c-.1 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.5 2.3 3.7 3.2.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.2-.5 1.4-.9.2-.5.2-.9.1-1-.1-.1-.3-.2-.6-.3z" fill="white"/></svg>
-            <span class="font-semibold text-lg tracking-tight" style="color:var(--text-primary);">whaagent</span>
+            <span class="font-semibold text-lg tracking-tight">whaagent</span>
           </div>
-          <p class="text-sm leading-relaxed max-w-xs" style="color:var(--text-muted);">Multi-agent AI framework for WhatsApp. Open source. Self-hosted. Built by Musadiq.</p>
+          <p class="text-sm text-white/50 leading-relaxed max-w-xs">Multi-agent AI framework for WhatsApp. Open source. Self-hosted. Built by Musadiq.</p>
         </div>
         <div>
-          <h4 class="text-xs font-semibold uppercase tracking-wider mb-4" style="color:var(--text-muted);">Product</h4>
+          <h4 class="text-xs font-semibold text-white/40 uppercase tracking-wider mb-4">Product</h4>
           <ul class="space-y-2.5">
-            <li><a href="#architecture" class="text-sm transition-colors" style="color:var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">Architecture</a></li>
-            <li><a href="#agents" class="text-sm transition-colors" style="color:var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">Agents</a></li>
-            <li><a href="#quickstart" class="text-sm transition-colors" style="color:var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">Quickstart</a></li>
+            <li><a href="#architecture" class="text-sm text-white/60 hover:text-white transition-colors">Architecture</a></li>
+            <li><a href="#agents" class="text-sm text-white/60 hover:text-white transition-colors">Agents</a></li>
+            <li><a href="#quickstart" class="text-sm text-white/60 hover:text-white transition-colors">Quickstart</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="text-xs font-semibold uppercase tracking-wider mb-4" style="color:var(--text-muted);">Resources</h4>
+          <h4 class="text-xs font-semibold text-white/40 uppercase tracking-wider mb-4">Resources</h4>
           <ul class="space-y-2.5">
-            <li><a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="text-sm transition-colors" style="color:var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">GitHub</a></li>
-            <li><a href="https://github.com/MusadiqUrRahman/whaagent/releases" target="_blank" class="text-sm transition-colors" style="color:var(--text-secondary);" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">Releases</a></li>
+            <li><a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="text-sm text-white/60 hover:text-white transition-colors">GitHub</a></li>
+            <li><a href="https://github.com/MusadiqUrRahman/whaagent/releases" target="_blank" class="text-sm text-white/60 hover:text-white transition-colors">Releases</a></li>
           </ul>
         </div>
       </div>
-      <div class="pt-6 flex flex-col md:flex-row items-center justify-between gap-4" style="border-top:1px solid var(--border-color);">
-        <div class="text-sm" style="color:var(--text-muted);">&copy; 2025 whaagent. Open source under MIT.</div>
+      <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="text-sm text-white/40">&copy; 2025 whaagent. Open source under MIT.</div>
         <div class="flex items-center gap-3">
-          <a href="https://github.com/MusadiqUrRahman" target="_blank" class="w-9 h-9 rounded-lg flex items-center justify-center transition-colors" style="background:var(--bg-card);" onmouseover="this.style.background='var(--border-color)'" onmouseout="this.style.background='var(--bg-card)'">
-            <svg class="w-4 h-4" style="color:var(--text-secondary);" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          <a href="https://github.com/MusadiqUrRahman" target="_blank" class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+            <svg class="w-4 h-4 text-white/60" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
           </a>
         </div>
       </div>
