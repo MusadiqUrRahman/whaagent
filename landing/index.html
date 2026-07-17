@@ -1,293 +1,479 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>whaagent — Multi-Agent AI Framework for WhatsApp</title>
   <meta name="description" content="Production-grade multi-agent orchestration. 12 specialized agents, graph-based routing, MCP tool integration — delivered through WhatsApp.">
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.css">
   <link rel="stylesheet" href="styles.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['Geist Mono', 'JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            foreground: '#09090b',
+            muted: '#71717a',
+            accent: '#25D366',
+            card: '#f4f4f5',
+            border: '#e4e4e7',
+            background: '#fafafa',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #fafafa; color: #09090b; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    ::selection { background: rgba(37, 211, 102, 0.2); }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #fafafa; }
+    ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 3px; }
+    a { color: inherit; text-decoration: none; }
+
+    .terminal {
+      background: #1E1E2E;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .terminal-dot.red { background: #ff5f57; }
+    .terminal-dot.yellow { background: #febc2e; }
+    .terminal-dot.green { background: #28c840; }
+    .terminal-body { padding: 20px 24px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.9; }
+    .terminal-body .prompt { color: #25D366; }
+    .terminal-body .output { color: #ABB2BF; }
+    .terminal-body .cmd { color: #E5C07B; }
+    .terminal-body .comment { color: #5C6370; font-style: italic; }
+
+    .whatsapp-mock {
+      background: white;
+      border: 1px solid #e4e4e7;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 0 0 1px rgba(37,211,102,0.08);
+    }
+    .whatsapp-header {
+      background: #f9fafb;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid #e4e4e7;
+    }
+    .whatsapp-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: white;
+      font-weight: 600;
+    }
+    .whatsapp-body { padding: 18px; display: flex; flex-direction: column; gap: 10px; background: #f0faf4; }
+    .msg {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .msg-in { background: white; color: #18181b; align-self: flex-start; border: 1px solid #e4e4e7; border-bottom-left-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .msg-out { background: #d9fdd3; color: #18181b; align-self: flex-end; border-bottom-right-radius: 4px; white-space: pre-line; }
+
+    .arch-flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .arch-node {
+      padding: 12px 24px;
+      border: 1px solid #e4e4e7;
+      border-radius: 10px;
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #18181b;
+      background: white;
+      white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      font-weight: 500;
+    }
+    .arch-arrow {
+      width: 40px;
+      height: 1px;
+      background: #d4d4d8;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .arch-arrow::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: -4px;
+      width: 0;
+      height: 0;
+      border-left: 6px solid #d4d4d8;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+    }
+
+    .section-eyebrow {
+      font-size: 13px;
+      font-weight: 500;
+      color: #25D366;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .glass-card {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(228,228,231,0.8);
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid #e4e4e7;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .agent-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: white;
+      border: 1px solid #e4e4e7;
+      border-radius: 10px;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+    .agent-pill .name { font-weight: 500; color: #18181b; }
+    .agent-pill .desc { color: #71717a; font-size: 12px; }
+
+    @media (max-width: 768px) {
+      .arch-flow { flex-direction: column; gap: 0; }
+      .arch-arrow { width: 1px; height: 28px; background: #d4d4d8; }
+      .arch-arrow::after { right: -4px; top: auto; bottom: -1px; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 6px solid #d4d4d8; border-bottom: none; }
+    }
+  </style>
 </head>
 <body>
 
   <!-- Navigation -->
-  <nav id="nav">
-    <div class="nav-inner">
-      <a href="#" class="nav-logo">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#25D366"/><path d="M17.5 14.5c-.3 0-.6-.1-.8-.2-.2-.1-.5-.2-.8-.1-.3.1-.6.4-.8.7-.3.4-.5.9-.7 1.1-.2.2-.3.2-.5.1-.2-.1-.7-.3-1.3-.6-.5-.3-.9-.5-1.1-.8-.2-.2-.2-.4-.1-.5.1-.2.3-.4.5-.7.2-.2.2-.4.3-.5.1-.2 0-.4 0-.5-.1-.2-.5-1.2-.7-1.6-.2-.4-.3-.4-.4-.4h-.4c-.1 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.5 2.3 3.7 3.2.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.2-.5 1.4-.9.2-.5.2-.9.1-1-.1-.1-.3-.2-.6-.3z" fill="white"/></svg>
-        <span>whaagent</span>
+  <nav id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:rgba(250,250,250,0.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid #e4e4e7;">
+    <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2.5">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#25D366"/><path d="M17.5 14.5c-.3 0-.6-.1-.8-.2-.2-.1-.5-.2-.8-.1-.3.1-.6.4-.8.7-.3.4-.5.9-.7 1.1-.2.2-.3.2-.5.1-.2-.1-.7-.3-1.3-.6-.5-.3-.9-.5-1.1-.8-.2-.2-.2-.4-.1-.5.1-.2.3-.4.5-.7.2-.2.2-.4.3-.5.1-.2 0-.4 0-.5-.1-.2-.5-1.2-.7-1.6-.2-.4-.3-.4-.4-.4h-.4c-.1 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.5 2.3 3.7 3.2.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.2-.5 1.4-.9.2-.5.2-.9.1-1-.1-.1-.3-.2-.6-.3z" fill="white"/></svg>
+        <span class="text-foreground font-semibold text-lg tracking-tight">whaagent</span>
       </a>
-      <div class="nav-links">
-        <a href="#architecture">Architecture</a>
-        <a href="#agents">Agents</a>
-        <a href="#quickstart">Quickstart</a>
+      <div class="hidden md:flex items-center gap-1">
+        <a href="#architecture" class="px-3 py-2 text-sm text-muted hover:text-foreground transition-colors rounded-lg">Architecture</a>
+        <a href="#agents" class="px-3 py-2 text-sm text-muted hover:text-foreground transition-colors rounded-lg">Agents</a>
+        <a href="#quickstart" class="px-3 py-2 text-sm text-muted hover:text-foreground transition-colors rounded-lg">Quickstart</a>
       </div>
-      <div class="nav-actions">
-        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-        </button>
-        <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="nav-github">
-          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="hidden sm:flex items-center gap-2 text-sm text-muted hover:text-foreground transition-colors">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
         </a>
-        <a href="#quickstart" class="nav-cta">Get started</a>
+        <a href="#quickstart" class="h-10 px-5 text-sm font-medium text-white bg-foreground rounded-full hover:bg-foreground/85 transition-all hover:shadow-lg hover:shadow-black/10 inline-flex items-center gap-2">
+          Get started
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+        </a>
       </div>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="hero">
-    <div class="hero-bg">
-      <div class="gradient-orb orb-1"></div>
-      <div class="gradient-orb orb-2"></div>
-      <div class="gradient-orb orb-3"></div>
-    </div>
-    <div class="hero-content">
-      <div class="hero-badge anim-fade-up">
-        <span class="badge-dot"></span>
-        Open source
-      </div>
-      <h1 class="hero-title">
-        <span class="line anim-split">Multi-agent AI,</span>
-        <span class="line anim-split">delivered through</span>
-        <span class="line anim-split"><em>WhatsApp.</em></span>
-      </h1>
-      <p class="hero-sub anim-fade-up" data-delay="0.4">
-        A production framework for building conversational AI systems. Graph-based routing, MCP tool integration, and 12 specialized agents running on your infrastructure.
-      </p>
-      <div class="hero-ctas anim-fade-up" data-delay="0.6">
-        <a href="#quickstart" class="btn btn-primary">
-          Get started
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-        </a>
-        <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="btn btn-ghost">
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-          GitHub
-        </a>
-      </div>
-    </div>
-    <div class="hero-video anim-scale-in">
-      <div class="video-wrapper">
-        <video autoplay muted loop playsinline>
-          <source src="video.mp4" type="video/mp4">
-        </video>
+  <section class="pt-28 pb-16 lg:pt-32 lg:pb-20 mesh-bg">
+    <div class="blob blob-green blob-1"></div>
+    <div class="blob blob-purple blob-2"></div>
+    <div class="blob blob-blue blob-3"></div>
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div class="hero-content">
+          <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-border/40 text-accent text-sm font-medium mb-6">
+            <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+            Open source
+          </div>
+          <h1 class="reveal reveal-delay-1 text-[40px] md:text-[56px] lg:text-[64px] leading-[1.08] tracking-[-0.035em] text-foreground mb-5" style="font-weight:600;">
+            Multi-agent AI,<br>delivered through<br>WhatsApp.
+          </h1>
+          <p class="reveal reveal-delay-2 text-lg text-muted leading-relaxed mb-8 max-w-md">
+            A production framework for building conversational AI systems. Graph-based routing, MCP tool integration, and 12 specialized agents running on your infrastructure.
+          </p>
+          <div class="reveal reveal-delay-3 flex flex-wrap items-center gap-3">
+            <a href="#quickstart" class="cta-glow h-12 px-7 text-sm font-medium text-white bg-foreground rounded-full hover:bg-foreground/85 transition-all hover:shadow-lg hover:shadow-black/10 inline-flex items-center gap-2">
+              Get started
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+            </a>
+            <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="h-12 px-7 text-sm font-medium text-foreground bg-white/80 backdrop-blur-sm rounded-full border border-border hover:border-foreground/20 transition-all inline-flex items-center gap-2">
+              View on GitHub
+            </a>
+          </div>
+        </div>
+        <div class="reveal-scale">
+          <div class="video-glow relative rounded-2xl overflow-hidden border border-border shadow-lg" style="box-shadow:0 8px 40px rgba(37,211,102,0.08),0 0 0 1px rgba(37,211,102,0.06);">
+            <video autoplay muted loop playsinline class="w-full h-auto block" style="aspect-ratio:16/9;object-fit:cover;">
+              <source src="video.mp4" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 pointer-events-none rounded-2xl" style="box-shadow:inset 0 0 0 1px rgba(255,255,255,0.08);"></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Stats -->
-  <section class="stats">
-    <div class="container">
-      <div class="stats-grid">
-        <div class="stat-item scroll-reveal">
-          <span class="stat-number" data-count="12">0</span>
-          <span class="stat-label">Agents</span>
+  <!-- Trust Bar -->
+  <section class="py-12">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="stat-card reveal">
+          <div class="text-3xl font-bold text-foreground tracking-tight">12</div>
+          <div class="text-sm text-muted mt-1">Agents</div>
         </div>
-        <div class="stat-item scroll-reveal" data-delay="0.1">
-          <span class="stat-number" data-count="3">0</span>
-          <span class="stat-label">Graph Nodes</span>
+        <div class="stat-card reveal reveal-delay-1">
+          <div class="text-3xl font-bold text-foreground tracking-tight">3</div>
+          <div class="text-sm text-muted mt-1">Graph Nodes</div>
         </div>
-        <div class="stat-item scroll-reveal" data-delay="0.2">
-          <span class="stat-number" data-count="2">0</span>
-          <span class="stat-label">Languages</span>
+        <div class="stat-card reveal reveal-delay-2">
+          <div class="text-3xl font-bold text-foreground tracking-tight">2</div>
+          <div class="text-sm text-muted mt-1">Languages</div>
         </div>
-        <div class="stat-item scroll-reveal" data-delay="0.3">
-          <span class="stat-number stat-accent">100%</span>
-          <span class="stat-label">Open Source</span>
+        <div class="stat-card reveal reveal-delay-3">
+          <div class="text-3xl font-bold text-accent tracking-tight">100%</div>
+          <div class="text-sm text-muted mt-1">Open Source</div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Video Showcase -->
-  <section class="showcase">
-    <div class="container">
-      <div class="showcase-video scroll-reveal">
-        <div class="video-wrapper video-wrapper-lg">
-          <video autoplay muted loop playsinline>
-            <source src="video.mp4" type="video/mp4">
-          </video>
-        </div>
+  <section class="py-16">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="reveal-scale video-glow relative rounded-2xl overflow-hidden border border-border" style="box-shadow:0 12px 48px rgba(0,0,0,0.08);">
+        <video autoplay muted loop playsinline class="w-full h-auto block" style="aspect-ratio:16/9;object-fit:cover;">
+          <source src="video.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 pointer-events-none rounded-2xl" style="box-shadow:inset 0 0 0 1px rgba(255,255,255,0.06);"></div>
       </div>
     </div>
   </section>
 
   <!-- Architecture -->
-  <section id="architecture" class="section">
-    <div class="container">
-      <div class="section-header scroll-reveal">
-        <span class="section-eyebrow">Architecture</span>
-        <h2 class="section-title split-text">Three-node state graph.</h2>
-        <p class="section-desc">Summarize, Router, Agent. Token-aware compression, LLM-powered intent classification, and tool execution in a single directed graph.</p>
+  <section id="architecture" class="py-20 lg:py-28 section-glow">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="reveal mb-16">
+        <div class="section-eyebrow">Architecture</div>
+        <h2 class="text-3xl md:text-[40px] text-foreground tracking-[-0.025em] mb-3 leading-[1.15]">Three-node state graph.</h2>
+        <p class="text-lg text-muted max-w-lg leading-relaxed">Summarize, Router, Agent. Token-aware compression, LLM-powered intent classification, and tool execution in a single directed graph.</p>
       </div>
-      <div class="arch-flow scroll-reveal">
+      <div class="reveal arch-flow mb-16">
         <div class="arch-node">Summarize</div>
-        <div class="arch-line"></div>
+        <div class="arch-arrow"></div>
         <div class="arch-node">Router</div>
-        <div class="arch-line"></div>
+        <div class="arch-arrow"></div>
         <div class="arch-node">Agent</div>
       </div>
-      <div class="features-grid">
-        <div class="feature-card scroll-reveal" data-delay="0">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z"/></svg>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="reveal reveal-delay-1 glass-card glow-card p-6">
+          <div class="w-10 h-10 rounded-lg bg-card border border-border/40 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z"/></svg>
           </div>
-          <h3>Go Gateway</h3>
-          <p>WhatsApp session management, QR code generation, WebSocket connection with automatic reconnection.</p>
+          <h3 class="text-sm font-semibold text-foreground mb-1">Go Gateway</h3>
+          <p class="text-sm text-muted leading-relaxed">WhatsApp session management, QR code generation, WebSocket connection with automatic reconnection.</p>
         </div>
-        <div class="feature-card scroll-reveal" data-delay="0.1">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+        <div class="reveal reveal-delay-2 glass-card glow-card p-6">
+          <div class="w-10 h-10 rounded-lg bg-card border border-border/40 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
           </div>
-          <h3>FastAPI Server</h3>
-          <p>Multi-tenant agent pools with LRU eviction, keep-alive health checks, per-tenant isolation.</p>
+          <h3 class="text-sm font-semibold text-foreground mb-1">FastAPI Server</h3>
+          <p class="text-sm text-muted leading-relaxed">Multi-tenant agent pools with LRU eviction, keep-alive health checks, per-tenant isolation.</p>
         </div>
-        <div class="feature-card scroll-reveal" data-delay="0.2">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 00.659 1.591L19 14.5M14.25 3.104c.251.023.501.05.75.082M19 14.5l-2.47 2.47a2.25 2.25 0 01-.659 1.591v0a2.25 2.25 0 01-2.25 2.25H5.25a2.25 2.25 0 01-2.25-2.25v0a2.25 2.25 0 01.659-1.591L5 14.5m14 0V6.37a2.25 2.25 0 00-.659-1.591L15 3.104"/></svg>
+        <div class="reveal reveal-delay-3 glass-card glow-card p-6">
+          <div class="w-10 h-10 rounded-lg bg-card border border-border/40 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 00.659 1.591L19 14.5M14.25 3.104c.251.023.501.05.75.082M19 14.5l-2.47 2.47a2.25 2.25 0 01-.659 1.591v0a2.25 2.25 0 01-2.25 2.25H5.25a2.25 2.25 0 01-2.25-2.25v0a2.25 2.25 0 01.659-1.591L5 14.5m14 0V6.37a2.25 2.25 0 00-.659-1.591L15 3.104"/></svg>
           </div>
-          <h3>MCP Protocol</h3>
-          <p>Model Context Protocol with circuit breaker resilience. Auto-discovers tools, graceful degradation.</p>
+          <h3 class="text-sm font-semibold text-foreground mb-1">MCP Protocol</h3>
+          <p class="text-sm text-muted leading-relaxed">Model Context Protocol with circuit breaker resilience. Auto-discovers tools, graceful degradation.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Agents -->
-  <section id="agents" class="section section-alt">
-    <div class="container">
-      <div class="section-header scroll-reveal">
-        <span class="section-eyebrow">Agents</span>
-        <h2 class="section-title split-text">12 specialized agents.</h2>
-        <p class="section-desc">Each agent has its own system prompt, tool set, and MCP connections. The assistant agent orchestrates sub-agents via graph-based delegation.</p>
+  <section id="agents" class="py-20 lg:py-28 section-glow" style="background:white;">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="reveal mb-12">
+        <div class="section-eyebrow">Agents</div>
+        <h2 class="text-3xl md:text-[40px] text-foreground tracking-[-0.025em] mb-3 leading-[1.15]">12 specialized agents.</h2>
+        <p class="text-lg text-muted max-w-lg leading-relaxed">Each agent has its own system prompt, tool set, and MCP connections. The assistant agent orchestrates sub-agents via graph-based delegation.</p>
       </div>
-      <div class="agents-grid">
-        <div class="agent-tag scroll-reveal" data-delay="0"><span class="agent-name">assistant</span><span class="agent-desc">Generalist orchestrator</span></div>
-        <div class="agent-tag scroll-reveal" data-delay="0.05"><span class="agent-name">developer</span><span class="agent-desc">Code exploration</span></div>
-        <div class="agent-tag scroll-reveal" data-delay="0.1"><span class="agent-name">committer</span><span class="agent-desc">Git automation</span></div>
-        <div class="agent-tag scroll-reveal" data-delay="0.15"><span class="agent-name">news</span><span class="agent-desc">English news</span></div>
-        <div class="agent-tag scroll-reveal" data-delay="0.2"><span class="agent-name">br-news</span><span class="agent-desc">Portuguese news</span></div>
-        <div class="agent-tag scroll-reveal" data-delay="0.25"><span class="agent-name">es-news</span><span class="agent-desc">Spanish news</span></div>
-        <div class="agent-tag scroll-reveal" data-delay="0.3"><span class="agent-name">learning</span><span class="agent-desc">Educational content</span></div>
-        <div class="agent-tag scroll-reveal" data-delay="0.35"><span class="agent-name">youtube</span><span class="agent-desc">Transcript extraction</span></div>
-        <div class="agent-tag scroll-reveal" data-delay="0.4"><span class="agent-name">github-pr</span><span class="agent-desc">PR automation</span></div>
-        <div class="agent-tag scroll-reveal" data-delay="0.45"><span class="agent-name">paywall</span><span class="agent-desc">Deep web scraping</span></div>
-        <div class="agent-tag scroll-reveal" data-delay="0.5"><span class="agent-name">ollama</span><span class="agent-desc">Local model backend</span></div>
-        <div class="agent-tag scroll-reveal" data-delay="0.55"><span class="agent-name">recipe</span><span class="agent-desc">Recipe generation</span></div>
+      <div class="flex flex-wrap gap-3">
+        <div class="reveal reveal-delay-1 agent-pill"><span class="name">assistant</span><span class="desc">Generalist orchestrator</span></div>
+        <div class="reveal reveal-delay-1 agent-pill"><span class="name">developer</span><span class="desc">Code exploration and validation</span></div>
+        <div class="reveal reveal-delay-2 agent-pill"><span class="name">committer</span><span class="desc">Git commit automation</span></div>
+        <div class="reveal reveal-delay-2 agent-pill"><span class="name">news</span><span class="desc">English news aggregation</span></div>
+        <div class="reveal reveal-delay-3 agent-pill"><span class="name">br-news</span><span class="desc">Portuguese news</span></div>
+        <div class="reveal reveal-delay-3 agent-pill"><span class="name">es-news</span><span class="desc">Spanish news</span></div>
+        <div class="reveal reveal-delay-4 agent-pill"><span class="name">learning</span><span class="desc">Educational content</span></div>
+        <div class="reveal reveal-delay-4 agent-pill"><span class="name">youtube</span><span class="desc">Transcript extraction</span></div>
+        <div class="reveal reveal-delay-1 agent-pill"><span class="name">github-pr-reviewer</span><span class="desc">Pull request automation</span></div>
+        <div class="reveal reveal-delay-1 agent-pill"><span class="name">paywall-remover</span><span class="desc">Deep web scraping</span></div>
+        <div class="reveal reveal-delay-2 agent-pill"><span class="name">ollama</span><span class="desc">Local model backend</span></div>
+        <div class="reveal reveal-delay-2 agent-pill"><span class="name">recipe</span><span class="desc">Recipe generation</span></div>
       </div>
     </div>
   </section>
 
   <!-- Quickstart -->
-  <section id="quickstart" class="section">
-    <div class="container">
-      <div class="section-header scroll-reveal">
-        <span class="section-eyebrow">Quickstart</span>
-        <h2 class="section-title split-text">Running in 60 seconds.</h2>
+  <section id="quickstart" class="py-20 lg:py-28 mesh-bg">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="reveal mb-12">
+        <div class="section-eyebrow">Quickstart</div>
+        <h2 class="text-3xl md:text-[40px] text-foreground tracking-[-0.025em] mb-3 leading-[1.15]">Running in 60 seconds.</h2>
       </div>
-      <div class="terminals">
-        <div class="terminal-block scroll-reveal">
-          <div class="terminal-label">Docker</div>
+      <div class="space-y-6">
+        <div class="reveal">
+          <div class="text-xs text-muted uppercase tracking-wider mb-3 font-medium">Docker</div>
           <div class="terminal">
-            <div class="terminal-chrome">
-              <span class="dot red"></span>
-              <span class="dot yellow"></span>
-              <span class="dot green"></span>
+            <div class="terminal-header">
+              <div class="terminal-dot red"></div>
+              <div class="terminal-dot yellow"></div>
+              <div class="terminal-dot green"></div>
             </div>
-            <pre class="terminal-code"><code><span class="t-prompt">$</span> <span class="t-cmd">git clone</span> <span class="t-out">https://github.com/MusadiqUrRahman/whaagent.git</span>
-<span class="t-prompt">$</span> <span class="t-cmd">cd</span> <span class="t-out">whaagent && cp .env.example .env</span>
-<span class="t-comment"># add your API key to .env</span>
-<span class="t-prompt">$</span> <span class="t-cmd">docker compose up -d</span>
-<span class="t-prompt">$</span> <span class="t-cmd">curl</span> <span class="t-out">http://localhost:8000/health</span></code></pre>
+            <div class="terminal-body">
+              <div><span class="prompt">$</span> <span class="cmd">git clone</span> <span class="output">https://github.com/MusadiqUrRahman/whaagent.git</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">cd</span> <span class="output">whaagent && cp .env.example .env</span></div>
+              <div><span class="comment"># add your API key to .env</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">docker compose up -d</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">curl</span> <span class="output">http://localhost:8000/health</span></div>
+            </div>
           </div>
         </div>
-        <div class="terminal-block scroll-reveal" data-delay="0.1">
-          <div class="terminal-label">Manual</div>
+        <div class="reveal">
+          <div class="text-xs text-muted uppercase tracking-wider mb-3 font-medium">Manual</div>
           <div class="terminal">
-            <div class="terminal-chrome">
-              <span class="dot red"></span>
-              <span class="dot yellow"></span>
-              <span class="dot green"></span>
+            <div class="terminal-header">
+              <div class="terminal-dot red"></div>
+              <div class="terminal-dot yellow"></div>
+              <div class="terminal-dot green"></div>
             </div>
-            <pre class="terminal-code"><code><span class="t-comment"># Python 3.12, Go 1.21+</span>
-<span class="t-prompt">$</span> <span class="t-cmd">uv sync</span>
-<span class="t-prompt">$</span> <span class="t-cmd">cd</span> <span class="t-out">gateway && go build -o whaagent-gateway</span>
-<span class="t-prompt">$</span> <span class="t-cmd">whaagent serve</span></code></pre>
+            <div class="terminal-body">
+              <div><span class="comment"># Python 3.12, Go 1.21+</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">uv sync</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">cd</span> <span class="output">gateway && go build -o whaagent-gateway</span></div>
+              <div><span class="prompt">$</span> <span class="cmd">whaagent serve</span></div>
+            </div>
           </div>
         </div>
-        <div class="terminal-block scroll-reveal" data-delay="0.2">
-          <div class="terminal-label">CLI</div>
+        <div class="reveal">
+          <div class="text-xs text-muted uppercase tracking-wider mb-3 font-medium">CLI</div>
           <div class="terminal">
-            <div class="terminal-chrome">
-              <span class="dot red"></span>
-              <span class="dot yellow"></span>
-              <span class="dot green"></span>
+            <div class="terminal-header">
+              <div class="terminal-dot red"></div>
+              <div class="terminal-dot yellow"></div>
+              <div class="terminal-dot green"></div>
             </div>
-            <pre class="terminal-code"><code><span class="t-prompt">$</span> <span class="t-cmd">whaagent list</span>
-<span class="t-out">12 registered agents</span>
-
-<span class="t-prompt">$</span> <span class="t-cmd">whaagent chat</span> <span class="t-out">"Hello" -a assistant</span>
-<span class="t-out">Agent responds via configured LLM provider</span></code></pre>
+            <div class="terminal-body">
+              <div><span class="prompt">$</span> <span class="cmd">whaagent list</span></div>
+              <div class="output">12 registered agents</div>
+              <div class="mt-2"><span class="prompt">$</span> <span class="cmd">whaagent chat</span> <span class="output">"Hello" -a assistant</span></div>
+              <div class="output">Agent responds via configured LLM provider</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="section cta-section">
-    <div class="container">
-      <div class="cta-content scroll-reveal">
-        <h2 class="cta-title split-text">Build conversational<br>AI systems.</h2>
-        <p class="cta-desc">Open source. Self-hosted. Multi-tenant. Deploy on your infrastructure in minutes.</p>
-        <div class="cta-buttons">
-          <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="btn btn-primary">
-            View on GitHub
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
-          </a>
-          <a href="https://github.com/MusadiqUrRahman/whaagent/releases" target="_blank" class="btn btn-ghost">View Releases</a>
-        </div>
+  <!-- Final CTA -->
+  <section class="py-20 lg:py-28 section-glow">
+    <div class="max-w-[1200px] mx-auto px-6 text-center">
+      <h2 class="reveal text-3xl md:text-[40px] text-foreground tracking-[-0.025em] mb-4 leading-[1.15]" style="font-weight:600;">Build conversational AI systems.</h2>
+      <p class="reveal reveal-delay-1 text-lg text-muted mb-8 max-w-md mx-auto leading-relaxed">Open source. Self-hosted. Multi-tenant. Deploy on your infrastructure in minutes.</p>
+      <div class="reveal reveal-delay-2 flex flex-wrap items-center justify-center gap-3">
+        <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="cta-glow h-12 px-7 text-sm font-medium text-white bg-foreground rounded-full hover:bg-foreground/85 transition-all hover:shadow-lg hover:shadow-black/10 inline-flex items-center gap-2">
+          View on GitHub
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+        </a>
+        <a href="https://github.com/MusadiqUrRahman/whaagent/releases" target="_blank" class="h-12 px-7 text-sm font-medium text-foreground bg-white/80 backdrop-blur-sm rounded-full border border-border hover:border-foreground/20 transition-all inline-flex items-center gap-2">
+          View Releases
+        </a>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="footer-logo">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#25D366"/><path d="M17.5 14.5c-.3 0-.6-.1-.8-.2-.2-.1-.5-.2-.8-.1-.3.1-.6.4-.8.7-.3.4-.5.9-.7 1.1-.2.2-.3.2-.5.1-.2-.1-.7-.3-1.3-.6-.5-.3-.9-.5-1.1-.8-.2-.2-.2-.4-.1-.5.1-.2.3-.4.5-.7.2-.2.2-.4.3-.5.1-.2 0-.4 0-.5-.1-.2-.5-1.2-.7-1.6-.2-.4-.3-.4-.4-.4h-.4c-.1 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.5 2.3 3.7 3.2.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.2-.5 1.4-.9.2-.5.2-.9.1-1-.1-.1-.3-.2-.6-.3z" fill="white"/></svg>
-            <span>whaagent</span>
+  <footer class="bg-foreground text-white py-12">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-12">
+        <div class="col-span-2 md:col-span-3 lg:col-span-2">
+          <div class="flex items-center gap-2.5 mb-4">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#25D366"/><path d="M17.5 14.5c-.3 0-.6-.1-.8-.2-.2-.1-.5-.2-.8-.1-.3.1-.6.4-.8.7-.3.4-.5.9-.7 1.1-.2.2-.3.2-.5.1-.2-.1-.7-.3-1.3-.6-.5-.3-.9-.5-1.1-.8-.2-.2-.2-.4-.1-.5.1-.2.3-.4.5-.7.2-.2.2-.4.3-.5.1-.2 0-.4 0-.5-.1-.2-.5-1.2-.7-1.6-.2-.4-.3-.4-.4-.4h-.4c-.1 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.5 2.3 3.7 3.2.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.2-.5 1.4-.9.2-.5.2-.9.1-1-.1-.1-.3-.2-.6-.3z" fill="white"/></svg>
+            <span class="font-semibold text-lg tracking-tight">whaagent</span>
           </div>
-          <p>Multi-agent AI framework for WhatsApp. Built by Musadiq.</p>
+          <p class="text-sm text-white/50 leading-relaxed max-w-xs">Multi-agent AI framework for WhatsApp. Open source. Self-hosted. Built by Musadiq.</p>
         </div>
-        <div class="footer-col">
-          <h4>Product</h4>
-          <a href="#architecture">Architecture</a>
-          <a href="#agents">Agents</a>
-          <a href="#quickstart">Quickstart</a>
+        <div>
+          <h4 class="text-xs font-semibold text-white/40 uppercase tracking-wider mb-4">Product</h4>
+          <ul class="space-y-2.5">
+            <li><a href="#architecture" class="text-sm text-white/60 hover:text-white transition-colors">Architecture</a></li>
+            <li><a href="#agents" class="text-sm text-white/60 hover:text-white transition-colors">Agents</a></li>
+            <li><a href="#quickstart" class="text-sm text-white/60 hover:text-white transition-colors">Quickstart</a></li>
+          </ul>
         </div>
-        <div class="footer-col">
-          <h4>Resources</h4>
-          <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank">GitHub</a>
-          <a href="https://github.com/MusadiqUrRahman/whaagent/releases" target="_blank">Releases</a>
+        <div>
+          <h4 class="text-xs font-semibold text-white/40 uppercase tracking-wider mb-4">Resources</h4>
+          <ul class="space-y-2.5">
+            <li><a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="text-sm text-white/60 hover:text-white transition-colors">GitHub</a></li>
+            <li><a href="https://github.com/MusadiqUrRahman/whaagent/releases" target="_blank" class="text-sm text-white/60 hover:text-white transition-colors">Releases</a></li>
+          </ul>
         </div>
       </div>
-      <div class="footer-bottom">
-        <span>&copy; 2025 whaagent. Open source under MIT.</span>
-        <a href="https://github.com/MusadiqUrRahman" target="_blank" class="footer-social">
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-        </a>
+      <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="text-sm text-white/40">&copy; 2025 whaagent. Open source under MIT.</div>
+        <div class="flex items-center gap-3">
+          <a href="https://github.com/MusadiqUrRahman" target="_blank" class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+            <svg class="w-4 h-4 text-white/60" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          </a>
+        </div>
       </div>
     </div>
   </footer>
 
-  <!-- GSAP -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <div class="noise-overlay"></div>
   <script src="script.js"></script>
 </body>
 </html>
