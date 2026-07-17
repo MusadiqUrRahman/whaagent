@@ -6,39 +6,6 @@
 (function () {
   'use strict';
 
-  // --- Auto-switch from dark to light after 10 seconds ---
-  setTimeout(function () {
-    document.documentElement.style.background = '#fafafa';
-    document.body.style.background = '#fafafa';
-    document.body.style.color = '#09090b';
-    document.querySelectorAll('.glass-card, .stat-card, .agent-pill, .arch-node').forEach(function (el) {
-      el.style.background = '#ffffff';
-      el.style.borderColor = '#e4e4e7';
-      el.style.color = '#09090b';
-    });
-    document.querySelectorAll('.section-eyebrow').forEach(function (el) {
-      el.style.color = '#16a34a';
-    });
-    document.querySelectorAll('.text-muted, .text-sm, [style*="color:"]').forEach(function (el) {
-      if (el.style.color === 'rgb(161, 161, 170)' || el.style.color === 'rgb(113, 113, 122)') {
-        el.style.color = '#52525b';
-      }
-    });
-    var header = document.getElementById('header');
-    if (header) {
-      header.style.background = 'rgba(250,250,250,0.92)';
-      header.style.borderBottomColor = '#e4e4e7';
-    }
-    document.querySelectorAll('.cta-glow, [style*="background:#25D366"], [style*="background: rgb(37"]').forEach(function (el) {
-      el.style.background = '#16a34a';
-    });
-    document.querySelectorAll('.arch-arrow').forEach(function (el) {
-      el.style.background = '#d4d4d8';
-    });
-    var meshBg = document.querySelector('.mesh-bg::before');
-    document.querySelector('.noise-overlay').style.opacity = '0.015';
-  }, 10000);
-
   // --- Scroll Reveal ---
   const revealObserver = new IntersectionObserver(
     (entries) => {
