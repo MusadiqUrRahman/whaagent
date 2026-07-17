@@ -20,12 +20,12 @@
             mono: ['Geist Mono', 'JetBrains Mono', 'monospace'],
           },
           colors: {
-            foreground: '#09090b',
-            muted: '#71717a',
+            foreground: '#e4e4e7',
+            muted: '#a1a1aa',
             accent: '#25D366',
-            card: '#f4f4f5',
-            border: '#e4e4e7',
-            background: '#fafafa',
+            card: '#18181b',
+            border: '#27272a',
+            background: '#09090b',
           },
         },
       },
@@ -33,11 +33,11 @@
   </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #fafafa; color: #09090b; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    body { background: #09090b; color: #e4e4e7; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; transition: background 0.6s ease, color 0.6s ease; }
     ::selection { background: rgba(37, 211, 102, 0.2); }
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #fafafa; }
-    ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: #09090b; }
+    ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 3px; }
     a { color: inherit; text-decoration: none; }
 
     .terminal {
@@ -62,6 +62,32 @@
     .terminal-body .output { color: #ABB2BF; }
     .terminal-body .cmd { color: #E5C07B; }
     .terminal-body .comment { color: #5C6370; font-style: italic; }
+
+    /* Light mode class — applied after 10s */
+    .light-mode body,
+    .light-mode { background: #fafafa; color: #09090b; }
+    .light-mode .stat-card { background: #ffffff; border-color: #e4e4e7; }
+    .light-mode .agent-pill { background: #ffffff; border-color: #e4e4e7; }
+    .light-mode .agent-pill .name { color: #18181b; }
+    .light-mode .glass-card { background: rgba(255,255,255,0.7); border-color: rgba(228,228,231,0.8); }
+    .light-mode .arch-node { background: #ffffff; border-color: #e4e4e7; color: #18181b; }
+    .light-mode .arch-arrow { background: #d4d4d8; }
+    .light-mode .arch-arrow::after { border-left-color: #d4d4d8; }
+    .light-mode .section-eyebrow { color: #16a34a; }
+    .light-mode .noise-overlay { opacity: 0.015; }
+    .light-mode ::-webkit-scrollbar-track { background: #fafafa; }
+    .light-mode ::-webkit-scrollbar-thumb { background: #d4d4d8; }
+    .light-mode #header { background: rgba(250,250,250,0.92); border-bottom-color: #e4e4e7; }
+    .light-mode .mesh-bg::before {
+      background:
+        radial-gradient(ellipse 600px 500px at 20% 30%, rgba(37, 211, 102, 0.1), transparent 60%),
+        radial-gradient(ellipse 500px 400px at 80% 20%, rgba(99, 102, 241, 0.06), transparent 55%),
+        radial-gradient(ellipse 400px 500px at 60% 80%, rgba(37, 211, 102, 0.04), transparent 50%);
+    }
+    .light-mode .blob-green { background: radial-gradient(circle, rgba(37, 211, 102, 0.2), transparent 70%); }
+    .light-mode .blob-purple { background: radial-gradient(circle, rgba(99, 102, 241, 0.15), transparent 70%); }
+    .light-mode .blob-blue { background: radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent 70%); }
+    .light-mode .section-glow::after { background: radial-gradient(ellipse, rgba(37, 211, 102, 0.04), transparent 70%); }
 
     .whatsapp-mock {
       background: white;
@@ -191,7 +217,7 @@
 <body>
 
   <!-- Navigation -->
-  <nav id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:rgba(250,250,250,0.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid #e4e4e7;">
+  <nav id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background:rgba(9,9,11,0.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(39,39,42,0.5);">
     <div class="max-w-[1200px] mx-auto px-6 h-16 flex items-center justify-between">
       <a href="#" class="flex items-center gap-2.5">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#25D366"/><path d="M17.5 14.5c-.3 0-.6-.1-.8-.2-.2-.1-.5-.2-.8-.1-.3.1-.6.4-.8.7-.3.4-.5.9-.7 1.1-.2.2-.3.2-.5.1-.2-.1-.7-.3-1.3-.6-.5-.3-.9-.5-1.1-.8-.2-.2-.2-.4-.1-.5.1-.2.3-.4.5-.7.2-.2.2-.4.3-.5.1-.2 0-.4 0-.5-.1-.2-.5-1.2-.7-1.6-.2-.4-.3-.4-.4-.4h-.4c-.1 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.5 2.3 3.7 3.2.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.2-.5 1.4-.9.2-.5.2-.9.1-1-.1-.1-.3-.2-.6-.3z" fill="white"/></svg>
@@ -223,7 +249,7 @@
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         <div class="hero-content">
-          <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-border/40 text-accent text-sm font-medium mb-6">
+          <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full backdrop-blur-sm border border-border/40 text-accent text-sm font-medium mb-6" style="background:rgba(24,24,27,0.7);">
             <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
             Open source
           </div>
@@ -238,7 +264,7 @@
               Get started
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
             </a>
-            <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="h-12 px-7 text-sm font-medium text-foreground bg-white/80 backdrop-blur-sm rounded-full border border-border hover:border-foreground/20 transition-all inline-flex items-center gap-2">
+            <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="h-12 px-7 text-sm font-medium text-foreground backdrop-blur-sm rounded-full border border-border hover:border-foreground/20 transition-all inline-flex items-center gap-2" style="background:rgba(24,24,27,0.7);">
               View on GitHub
             </a>
           </div>
@@ -428,7 +454,7 @@
           View on GitHub
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
         </a>
-        <a href="https://github.com/MusadiqUrRahman/whaagent/releases" target="_blank" class="h-12 px-7 text-sm font-medium text-foreground bg-white/80 backdrop-blur-sm rounded-full border border-border hover:border-foreground/20 transition-all inline-flex items-center gap-2">
+        <a href="https://github.com/MusadiqUrRahman/whaagent/releases" target="_blank" class="h-12 px-7 text-sm font-medium text-foreground backdrop-blur-sm rounded-full border border-border hover:border-foreground/20 transition-all inline-flex items-center gap-2" style="background:rgba(24,24,27,0.7);">
           View Releases
         </a>
       </div>
@@ -436,37 +462,37 @@
   </section>
 
   <!-- Footer -->
-  <footer class="bg-foreground text-white py-12">
+  <footer class="py-12" style="background:#18181b;border-top:1px solid #27272a;">
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-12">
         <div class="col-span-2 md:col-span-3 lg:col-span-2">
           <div class="flex items-center gap-2.5 mb-4">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#25D366"/><path d="M17.5 14.5c-.3 0-.6-.1-.8-.2-.2-.1-.5-.2-.8-.1-.3.1-.6.4-.8.7-.3.4-.5.9-.7 1.1-.2.2-.3.2-.5.1-.2-.1-.7-.3-1.3-.6-.5-.3-.9-.5-1.1-.8-.2-.2-.2-.4-.1-.5.1-.2.3-.4.5-.7.2-.2.2-.4.3-.5.1-.2 0-.4 0-.5-.1-.2-.5-1.2-.7-1.6-.2-.4-.3-.4-.4-.4h-.4c-.1 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.4c.1.2 1.5 2.3 3.7 3.2.5.2.9.3 1.2.4.5.2 1 .1 1.4.1.4-.1 1.2-.5 1.4-.9.2-.5.2-.9.1-1-.1-.1-.3-.2-.6-.3z" fill="white"/></svg>
-            <span class="font-semibold text-lg tracking-tight">whaagent</span>
+            <span class="font-semibold text-lg tracking-tight text-foreground">whaagent</span>
           </div>
-          <p class="text-sm text-white/50 leading-relaxed max-w-xs">Multi-agent AI framework for WhatsApp. Open source. Self-hosted. Built by Musadiq.</p>
+          <p class="text-sm text-muted leading-relaxed max-w-xs">Multi-agent AI framework for WhatsApp. Open source. Self-hosted. Built by Musadiq.</p>
         </div>
         <div>
-          <h4 class="text-xs font-semibold text-white/40 uppercase tracking-wider mb-4">Product</h4>
+          <h4 class="text-xs font-semibold text-muted uppercase tracking-wider mb-4">Product</h4>
           <ul class="space-y-2.5">
-            <li><a href="#architecture" class="text-sm text-white/60 hover:text-white transition-colors">Architecture</a></li>
-            <li><a href="#agents" class="text-sm text-white/60 hover:text-white transition-colors">Agents</a></li>
-            <li><a href="#quickstart" class="text-sm text-white/60 hover:text-white transition-colors">Quickstart</a></li>
+            <li><a href="#architecture" class="text-sm text-muted hover:text-foreground transition-colors">Architecture</a></li>
+            <li><a href="#agents" class="text-sm text-muted hover:text-foreground transition-colors">Agents</a></li>
+            <li><a href="#quickstart" class="text-sm text-muted hover:text-foreground transition-colors">Quickstart</a></li>
           </ul>
         </div>
         <div>
-          <h4 class="text-xs font-semibold text-white/40 uppercase tracking-wider mb-4">Resources</h4>
+          <h4 class="text-xs font-semibold text-muted uppercase tracking-wider mb-4">Resources</h4>
           <ul class="space-y-2.5">
-            <li><a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="text-sm text-white/60 hover:text-white transition-colors">GitHub</a></li>
-            <li><a href="https://github.com/MusadiqUrRahman/whaagent/releases" target="_blank" class="text-sm text-white/60 hover:text-white transition-colors">Releases</a></li>
+            <li><a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="text-sm text-muted hover:text-foreground transition-colors">GitHub</a></li>
+            <li><a href="https://github.com/MusadiqUrRahman/whaagent/releases" target="_blank" class="text-sm text-muted hover:text-foreground transition-colors">Releases</a></li>
           </ul>
         </div>
       </div>
-      <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="text-sm text-white/40">&copy; 2025 whaagent. Open source under MIT.</div>
+      <div class="border-t border-border pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="text-sm text-muted">&copy; 2025 whaagent. Open source under MIT.</div>
         <div class="flex items-center gap-3">
-          <a href="https://github.com/MusadiqUrRahman" target="_blank" class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
-            <svg class="w-4 h-4 text-white/60" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          <a href="https://github.com/MusadiqUrRahman" target="_blank" class="w-9 h-9 rounded-lg flex items-center justify-center transition-colors" style="background:rgba(39,39,42,0.5);" onmouseover="this.style.background='rgba(39,39,42,0.8)'" onmouseout="this.style.background='rgba(39,39,42,0.5)'">
+            <svg class="w-4 h-4 text-muted" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
           </a>
         </div>
       </div>
