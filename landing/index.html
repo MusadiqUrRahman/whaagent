@@ -263,47 +263,11 @@
           </div>
         </div>
         <div class="fade-in">
-          <div class="whatsapp-mock">
-            <div class="whatsapp-header">
-              <div class="whatsapp-avatar">W</div>
-              <div>
-                <div class="text-foreground text-sm font-semibold">Whaagent Bot</div>
-                <div class="text-muted text-xs">online</div>
-              </div>
-            </div>
-            <div class="whatsapp-body">
-              <div class="msg msg-in">Summarize the latest AI news for me</div>
-              <div class="msg msg-out">Here are the top stories today:
-
-1. OpenAI released GPT-5.4 with improved reasoning benchmarks (+12% on MMLU).
-
-2. Anthropic announced Claude Opus 4.7 with 200k context window.
-
-3. Google DeepMind published a paper on multi-agent coordination achieving SOTA on WebArena.</div>
-              <div class="msg msg-in">Create a PR review for the latest commit</div>
-              <div class="msg msg-out">Reviewing commit abc1234...
-
-2 suggestions found:
-- auth.py:42 — constant-time comparison for token validation
-- pool.py:89 — TTL-based fallback for LRU eviction
-
-Overall: Clean. No critical issues.</div>
-            </div>
-          </div>
-          <div class="terminal mt-5">
-            <div class="terminal-header">
-              <div class="terminal-dot red"></div>
-              <div class="terminal-dot yellow"></div>
-              <div class="terminal-dot green"></div>
-              <span class="text-[11px] text-white/30 ml-2 font-mono">Terminal</span>
-            </div>
-            <div class="terminal-body">
-              <div><span class="prompt">$</span> <span class="cmd">whaagent list</span></div>
-              <div class="output">12 registered agents</div>
-              <div class="mt-2"><span class="prompt">$</span> <span class="cmd">whaagent chat</span> <span class="output">"Hello" -a assistant</span></div>
-              <div class="output">Provider: openrouter | Agent: assistant</div>
-              <div class="output">Response: Hello! I'm your AI assistant.</div>
-            </div>
+          <div class="relative rounded-2xl overflow-hidden border border-border shadow-lg" style="box-shadow:0 8px 40px rgba(37,211,102,0.08),0 0 0 1px rgba(37,211,102,0.06);">
+            <video autoplay muted loop playsinline class="w-full h-auto block" style="aspect-ratio:16/9;object-fit:cover;">
+              <source src="video.mp4" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 pointer-events-none rounded-2xl" style="box-shadow:inset 0 0 0 1px rgba(255,255,255,0.08);"></div>
           </div>
         </div>
       </div>
@@ -330,6 +294,18 @@ Overall: Clean. No critical issues.</div>
           <div class="text-3xl font-bold text-accent tracking-tight">100%</div>
           <div class="text-sm text-muted mt-1">Open Source</div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video Showcase -->
+  <section class="py-16 fade-in">
+    <div class="max-w-[1200px] mx-auto px-6">
+      <div class="relative rounded-2xl overflow-hidden border border-border" style="box-shadow:0 12px 48px rgba(0,0,0,0.08);">
+        <video autoplay muted loop playsinline class="w-full h-auto block" style="aspect-ratio:16/9;object-fit:cover;">
+          <source src="video.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 pointer-events-none rounded-2xl" style="box-shadow:inset 0 0 0 1px rgba(255,255,255,0.06);"></div>
       </div>
     </div>
   </section>
