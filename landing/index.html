@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.1/dist/fonts/geist-mono/style.css">
+  <link rel="stylesheet" href="styles.css">
   <script>
     tailwind.config = {
       theme: {
@@ -37,7 +38,6 @@
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #fafafa; }
     ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 3px; }
-
     a { color: inherit; text-decoration: none; }
 
     .terminal {
@@ -139,9 +139,6 @@
       border-bottom: 4px solid transparent;
     }
 
-    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
-
     .section-eyebrow {
       font-size: 13px;
       font-weight: 500;
@@ -160,10 +157,6 @@
       box-shadow: 0 4px 16px rgba(0,0,0,0.04);
       transition: all 0.3s ease;
     }
-    .glass-card:hover {
-      box-shadow: 0 8px 32px rgba(37,211,102,0.08);
-      border-color: rgba(37,211,102,0.2);
-    }
 
     .stat-card {
       background: white;
@@ -172,10 +165,6 @@
       padding: 24px;
       text-align: center;
       transition: all 0.3s ease;
-    }
-    .stat-card:hover {
-      box-shadow: 0 4px 16px rgba(37,211,102,0.08);
-      border-color: rgba(37,211,102,0.2);
     }
 
     .agent-pill {
@@ -189,19 +178,8 @@
       font-size: 13px;
       transition: all 0.2s ease;
     }
-    .agent-pill:hover {
-      border-color: rgba(37,211,102,0.3);
-      box-shadow: 0 2px 8px rgba(37,211,102,0.06);
-    }
     .agent-pill .name { font-weight: 500; color: #18181b; }
     .agent-pill .desc { color: #71717a; font-size: 12px; }
-
-    @keyframes scroll-left {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .animate-scroll-left { animation: scroll-left 30s linear infinite; }
-    .animate-scroll-left:hover { animation-play-state: paused; }
 
     @media (max-width: 768px) {
       .arch-flow { flex-direction: column; gap: 0; }
@@ -238,22 +216,25 @@
   </nav>
 
   <!-- Hero -->
-  <section class="pt-28 pb-16 lg:pt-32 lg:pb-20">
+  <section class="pt-28 pb-16 lg:pt-32 lg:pb-20 mesh-bg">
+    <div class="blob blob-green blob-1"></div>
+    <div class="blob blob-purple blob-2"></div>
+    <div class="blob blob-blue blob-3"></div>
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-        <div>
-          <div class="fade-in inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-border/40 text-accent text-sm font-medium mb-6">
+        <div class="hero-content">
+          <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/70 backdrop-blur-sm border border-border/40 text-accent text-sm font-medium mb-6">
             <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
             Open source
           </div>
-          <h1 class="fade-in text-[40px] md:text-[56px] lg:text-[64px] leading-[1.08] tracking-[-0.035em] text-foreground mb-5" style="font-weight:600;">
+          <h1 class="reveal reveal-delay-1 text-[40px] md:text-[56px] lg:text-[64px] leading-[1.08] tracking-[-0.035em] text-foreground mb-5" style="font-weight:600;">
             Multi-agent AI,<br>delivered through<br>WhatsApp.
           </h1>
-          <p class="fade-in text-lg text-muted leading-relaxed mb-8 max-w-md">
+          <p class="reveal reveal-delay-2 text-lg text-muted leading-relaxed mb-8 max-w-md">
             A production framework for building conversational AI systems. Graph-based routing, MCP tool integration, and 12 specialized agents running on your infrastructure.
           </p>
-          <div class="fade-in flex flex-wrap items-center gap-3">
-            <a href="#quickstart" class="h-12 px-7 text-sm font-medium text-white bg-foreground rounded-full hover:bg-foreground/85 transition-all hover:shadow-lg hover:shadow-black/10 inline-flex items-center gap-2">
+          <div class="reveal reveal-delay-3 flex flex-wrap items-center gap-3">
+            <a href="#quickstart" class="cta-glow h-12 px-7 text-sm font-medium text-white bg-foreground rounded-full hover:bg-foreground/85 transition-all hover:shadow-lg hover:shadow-black/10 inline-flex items-center gap-2">
               Get started
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
             </a>
@@ -262,8 +243,8 @@
             </a>
           </div>
         </div>
-        <div class="fade-in">
-          <div class="relative rounded-2xl overflow-hidden border border-border shadow-lg" style="box-shadow:0 8px 40px rgba(37,211,102,0.08),0 0 0 1px rgba(37,211,102,0.06);">
+        <div class="reveal-scale">
+          <div class="video-glow relative rounded-2xl overflow-hidden border border-border shadow-lg" style="box-shadow:0 8px 40px rgba(37,211,102,0.08),0 0 0 1px rgba(37,211,102,0.06);">
             <video autoplay muted loop playsinline class="w-full h-auto block" style="aspect-ratio:16/9;object-fit:cover;">
               <source src="video.mp4" type="video/mp4">
             </video>
@@ -275,22 +256,22 @@
   </section>
 
   <!-- Trust Bar -->
-  <section class="py-12 fade-in">
+  <section class="py-12">
     <div class="max-w-[1200px] mx-auto px-6">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="stat-card">
+        <div class="stat-card reveal">
           <div class="text-3xl font-bold text-foreground tracking-tight">12</div>
           <div class="text-sm text-muted mt-1">Agents</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card reveal reveal-delay-1">
           <div class="text-3xl font-bold text-foreground tracking-tight">3</div>
           <div class="text-sm text-muted mt-1">Graph Nodes</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card reveal reveal-delay-2">
           <div class="text-3xl font-bold text-foreground tracking-tight">2</div>
           <div class="text-sm text-muted mt-1">Languages</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card reveal reveal-delay-3">
           <div class="text-3xl font-bold text-accent tracking-tight">100%</div>
           <div class="text-sm text-muted mt-1">Open Source</div>
         </div>
@@ -299,9 +280,9 @@
   </section>
 
   <!-- Video Showcase -->
-  <section class="py-16 fade-in">
+  <section class="py-16">
     <div class="max-w-[1200px] mx-auto px-6">
-      <div class="relative rounded-2xl overflow-hidden border border-border" style="box-shadow:0 12px 48px rgba(0,0,0,0.08);">
+      <div class="reveal-scale video-glow relative rounded-2xl overflow-hidden border border-border" style="box-shadow:0 12px 48px rgba(0,0,0,0.08);">
         <video autoplay muted loop playsinline class="w-full h-auto block" style="aspect-ratio:16/9;object-fit:cover;">
           <source src="video.mp4" type="video/mp4">
         </video>
@@ -311,36 +292,36 @@
   </section>
 
   <!-- Architecture -->
-  <section id="architecture" class="py-20 lg:py-28">
+  <section id="architecture" class="py-20 lg:py-28 section-glow">
     <div class="max-w-[1200px] mx-auto px-6">
-      <div class="fade-in mb-16">
+      <div class="reveal mb-16">
         <div class="section-eyebrow">Architecture</div>
         <h2 class="text-3xl md:text-[40px] text-foreground tracking-[-0.025em] mb-3 leading-[1.15]">Three-node state graph.</h2>
         <p class="text-lg text-muted max-w-lg leading-relaxed">Summarize, Router, Agent. Token-aware compression, LLM-powered intent classification, and tool execution in a single directed graph.</p>
       </div>
-      <div class="fade-in arch-flow mb-16">
+      <div class="reveal arch-flow mb-16">
         <div class="arch-node">Summarize</div>
         <div class="arch-arrow"></div>
         <div class="arch-node">Router</div>
         <div class="arch-arrow"></div>
         <div class="arch-node">Agent</div>
       </div>
-      <div class="fade-in grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="glass-card p-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="reveal reveal-delay-1 glass-card glow-card p-6">
           <div class="w-10 h-10 rounded-lg bg-card border border-border/40 flex items-center justify-center mb-4">
             <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z"/></svg>
           </div>
           <h3 class="text-sm font-semibold text-foreground mb-1">Go Gateway</h3>
           <p class="text-sm text-muted leading-relaxed">WhatsApp session management, QR code generation, WebSocket connection with automatic reconnection.</p>
         </div>
-        <div class="glass-card p-6">
+        <div class="reveal reveal-delay-2 glass-card glow-card p-6">
           <div class="w-10 h-10 rounded-lg bg-card border border-border/40 flex items-center justify-center mb-4">
             <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
           </div>
           <h3 class="text-sm font-semibold text-foreground mb-1">FastAPI Server</h3>
           <p class="text-sm text-muted leading-relaxed">Multi-tenant agent pools with LRU eviction, keep-alive health checks, per-tenant isolation.</p>
         </div>
-        <div class="glass-card p-6">
+        <div class="reveal reveal-delay-3 glass-card glow-card p-6">
           <div class="w-10 h-10 rounded-lg bg-card border border-border/40 flex items-center justify-center mb-4">
             <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 00.659 1.591L19 14.5M14.25 3.104c.251.023.501.05.75.082M19 14.5l-2.47 2.47a2.25 2.25 0 01-.659 1.591v0a2.25 2.25 0 01-2.25 2.25H5.25a2.25 2.25 0 01-2.25-2.25v0a2.25 2.25 0 01.659-1.591L5 14.5m14 0V6.37a2.25 2.25 0 00-.659-1.591L15 3.104"/></svg>
           </div>
@@ -352,39 +333,39 @@
   </section>
 
   <!-- Agents -->
-  <section id="agents" class="py-20 lg:py-28" style="background:white;">
+  <section id="agents" class="py-20 lg:py-28 section-glow" style="background:white;">
     <div class="max-w-[1200px] mx-auto px-6">
-      <div class="fade-in mb-12">
+      <div class="reveal mb-12">
         <div class="section-eyebrow">Agents</div>
         <h2 class="text-3xl md:text-[40px] text-foreground tracking-[-0.025em] mb-3 leading-[1.15]">12 specialized agents.</h2>
         <p class="text-lg text-muted max-w-lg leading-relaxed">Each agent has its own system prompt, tool set, and MCP connections. The assistant agent orchestrates sub-agents via graph-based delegation.</p>
       </div>
-      <div class="fade-in flex flex-wrap gap-3">
-        <div class="agent-pill"><span class="name">assistant</span><span class="desc">Generalist orchestrator</span></div>
-        <div class="agent-pill"><span class="name">developer</span><span class="desc">Code exploration and validation</span></div>
-        <div class="agent-pill"><span class="name">committer</span><span class="desc">Git commit automation</span></div>
-        <div class="agent-pill"><span class="name">news</span><span class="desc">English news aggregation</span></div>
-        <div class="agent-pill"><span class="name">br-news</span><span class="desc">Portuguese news</span></div>
-        <div class="agent-pill"><span class="name">es-news</span><span class="desc">Spanish news</span></div>
-        <div class="agent-pill"><span class="name">learning</span><span class="desc">Educational content</span></div>
-        <div class="agent-pill"><span class="name">youtube</span><span class="desc">Transcript extraction</span></div>
-        <div class="agent-pill"><span class="name">github-pr-reviewer</span><span class="desc">Pull request automation</span></div>
-        <div class="agent-pill"><span class="name">paywall-remover</span><span class="desc">Deep web scraping</span></div>
-        <div class="agent-pill"><span class="name">ollama</span><span class="desc">Local model backend</span></div>
-        <div class="agent-pill"><span class="name">recipe</span><span class="desc">Recipe generation</span></div>
+      <div class="flex flex-wrap gap-3">
+        <div class="reveal reveal-delay-1 agent-pill"><span class="name">assistant</span><span class="desc">Generalist orchestrator</span></div>
+        <div class="reveal reveal-delay-1 agent-pill"><span class="name">developer</span><span class="desc">Code exploration and validation</span></div>
+        <div class="reveal reveal-delay-2 agent-pill"><span class="name">committer</span><span class="desc">Git commit automation</span></div>
+        <div class="reveal reveal-delay-2 agent-pill"><span class="name">news</span><span class="desc">English news aggregation</span></div>
+        <div class="reveal reveal-delay-3 agent-pill"><span class="name">br-news</span><span class="desc">Portuguese news</span></div>
+        <div class="reveal reveal-delay-3 agent-pill"><span class="name">es-news</span><span class="desc">Spanish news</span></div>
+        <div class="reveal reveal-delay-4 agent-pill"><span class="name">learning</span><span class="desc">Educational content</span></div>
+        <div class="reveal reveal-delay-4 agent-pill"><span class="name">youtube</span><span class="desc">Transcript extraction</span></div>
+        <div class="reveal reveal-delay-1 agent-pill"><span class="name">github-pr-reviewer</span><span class="desc">Pull request automation</span></div>
+        <div class="reveal reveal-delay-1 agent-pill"><span class="name">paywall-remover</span><span class="desc">Deep web scraping</span></div>
+        <div class="reveal reveal-delay-2 agent-pill"><span class="name">ollama</span><span class="desc">Local model backend</span></div>
+        <div class="reveal reveal-delay-2 agent-pill"><span class="name">recipe</span><span class="desc">Recipe generation</span></div>
       </div>
     </div>
   </section>
 
   <!-- Quickstart -->
-  <section id="quickstart" class="py-20 lg:py-28">
+  <section id="quickstart" class="py-20 lg:py-28 mesh-bg">
     <div class="max-w-[1200px] mx-auto px-6">
-      <div class="fade-in mb-12">
+      <div class="reveal mb-12">
         <div class="section-eyebrow">Quickstart</div>
         <h2 class="text-3xl md:text-[40px] text-foreground tracking-[-0.025em] mb-3 leading-[1.15]">Running in 60 seconds.</h2>
       </div>
-      <div class="fade-in space-y-6">
-        <div>
+      <div class="space-y-6">
+        <div class="reveal">
           <div class="text-xs text-muted uppercase tracking-wider mb-3 font-medium">Docker</div>
           <div class="terminal">
             <div class="terminal-header">
@@ -401,7 +382,7 @@
             </div>
           </div>
         </div>
-        <div>
+        <div class="reveal">
           <div class="text-xs text-muted uppercase tracking-wider mb-3 font-medium">Manual</div>
           <div class="terminal">
             <div class="terminal-header">
@@ -417,7 +398,7 @@
             </div>
           </div>
         </div>
-        <div>
+        <div class="reveal">
           <div class="text-xs text-muted uppercase tracking-wider mb-3 font-medium">CLI</div>
           <div class="terminal">
             <div class="terminal-header">
@@ -438,12 +419,12 @@
   </section>
 
   <!-- Final CTA -->
-  <section class="py-20 lg:py-28 fade-in">
+  <section class="py-20 lg:py-28 section-glow">
     <div class="max-w-[1200px] mx-auto px-6 text-center">
-      <h2 class="text-3xl md:text-[40px] text-foreground tracking-[-0.025em] mb-4 leading-[1.15]" style="font-weight:600;">Build conversational AI systems.</h2>
-      <p class="text-lg text-muted mb-8 max-w-md mx-auto leading-relaxed">Open source. Self-hosted. Multi-tenant. Deploy on your infrastructure in minutes.</p>
-      <div class="flex flex-wrap items-center justify-center gap-3">
-        <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="h-12 px-7 text-sm font-medium text-white bg-foreground rounded-full hover:bg-foreground/85 transition-all hover:shadow-lg hover:shadow-black/10 inline-flex items-center gap-2">
+      <h2 class="reveal text-3xl md:text-[40px] text-foreground tracking-[-0.025em] mb-4 leading-[1.15]" style="font-weight:600;">Build conversational AI systems.</h2>
+      <p class="reveal reveal-delay-1 text-lg text-muted mb-8 max-w-md mx-auto leading-relaxed">Open source. Self-hosted. Multi-tenant. Deploy on your infrastructure in minutes.</p>
+      <div class="reveal reveal-delay-2 flex flex-wrap items-center justify-center gap-3">
+        <a href="https://github.com/MusadiqUrRahman/whaagent" target="_blank" class="cta-glow h-12 px-7 text-sm font-medium text-white bg-foreground rounded-full hover:bg-foreground/85 transition-all hover:shadow-lg hover:shadow-black/10 inline-flex items-center gap-2">
           View on GitHub
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
         </a>
@@ -492,26 +473,7 @@
     </div>
   </footer>
 
-  <script>
-    // Scroll-triggered fade-in
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-    // Header scroll effect
-    const header = document.getElementById('header');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 20) {
-        header.style.borderBottomColor = '#e4e4e7';
-        header.style.background = 'rgba(250,250,250,0.95)';
-      } else {
-        header.style.borderBottomColor = 'rgba(228,228,231,0.4)';
-        header.style.background = 'rgba(250,250,250,0.8)';
-      }
-    });
-  </script>
+  <div class="noise-overlay"></div>
+  <script src="script.js"></script>
 </body>
 </html>
