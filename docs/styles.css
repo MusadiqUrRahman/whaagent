@@ -1,9 +1,119 @@
 /* ============================================
-   whaagent Landing — Styles
-   Mesh gradients, animated blobs, glow effects
+   whaagent Landing — Theme System + Base
    ============================================ */
 
-/* --- Mesh Gradient Backgrounds --- */
+/* Dark Theme (default on load) */
+[data-theme="dark"] {
+  --bg-body: #09090b;
+  --bg-card: #18181b;
+  --bg-card-alt: #1c1c1f;
+  --bg-glass: rgba(24, 24, 27, 0.7);
+  --text-primary: #e4e4e7;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --border-color: #27272a;
+  --border-light: rgba(39, 39, 42, 0.8);
+  --nav-bg: rgba(9, 9, 11, 0.85);
+  --nav-border: rgba(39, 39, 42, 0.5);
+  --accent: #25D366;
+  --arch-arrow: #3f3f46;
+  --mesh-1: rgba(37, 211, 102, 0.15);
+  --mesh-2: rgba(99, 102, 241, 0.12);
+  --mesh-3: rgba(37, 211, 102, 0.08);
+  --blob-green: rgba(37, 211, 102, 0.25);
+  --blob-purple: rgba(99, 102, 241, 0.2);
+  --blob-blue: rgba(59, 130, 246, 0.15);
+  --glow-section: rgba(37, 211, 102, 0.06);
+  --noise-opacity: 0.03;
+  --scrollbar-thumb: #3f3f46;
+}
+
+/* Light Theme (auto-switch target) */
+[data-theme="light"] {
+  --bg-body: #fafafa;
+  --bg-card: #ffffff;
+  --bg-card-alt: #f9fafb;
+  --bg-glass: rgba(255, 255, 255, 0.7);
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+  --border-color: #e4e4e7;
+  --border-light: rgba(228, 228, 231, 0.8);
+  --nav-bg: rgba(250, 250, 250, 0.85);
+  --nav-border: rgba(228, 228, 231, 0.5);
+  --accent: #16a34a;
+  --arch-arrow: #d4d4d8;
+  --mesh-1: rgba(37, 211, 102, 0.1);
+  --mesh-2: rgba(99, 102, 241, 0.06);
+  --mesh-3: rgba(37, 211, 102, 0.04);
+  --blob-green: rgba(37, 211, 102, 0.2);
+  --blob-purple: rgba(99, 102, 241, 0.15);
+  --blob-blue: rgba(59, 130, 246, 0.1);
+  --glow-section: rgba(37, 211, 102, 0.04);
+  --noise-opacity: 0.015;
+  --scrollbar-thumb: #d4d4d8;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg-body);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.5s ease, color 0.5s ease;
+}
+
+::selection { background: rgba(37, 211, 102, 0.2); }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-body); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+a { color: inherit; text-decoration: none; }
+
+/* ============================================
+   Theme Toggle Button
+   ============================================ */
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(37, 211, 102, 0.08);
+}
+
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon {
+  width: 18px;
+  height: 18px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+[data-theme="dark"] .icon-sun { display: block; }
+[data-theme="dark"] .icon-moon { display: none; }
+[data-theme="light"] .icon-sun { display: none; }
+[data-theme="light"] .icon-moon { display: block; }
+
+/* ============================================
+   Mesh Gradient Backgrounds
+   ============================================ */
+
 .mesh-bg {
   position: relative;
   overflow: hidden;
@@ -19,11 +129,12 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 600px 500px at 20% 30%, rgba(37, 211, 102, 0.12), transparent 60%),
-    radial-gradient(ellipse 500px 400px at 80% 20%, rgba(99, 102, 241, 0.08), transparent 55%),
-    radial-gradient(ellipse 400px 500px at 60% 80%, rgba(37, 211, 102, 0.06), transparent 50%);
+    radial-gradient(ellipse 600px 500px at 20% 30%, var(--mesh-1), transparent 60%),
+    radial-gradient(ellipse 500px 400px at 80% 20%, var(--mesh-2), transparent 55%),
+    radial-gradient(ellipse 400px 500px at 60% 80%, var(--mesh-3), transparent 50%);
   animation: mesh-drift 20s ease-in-out infinite alternate;
   filter: blur(60px);
+  transition: background 0.5s ease;
 }
 
 .mesh-bg > * {
@@ -38,7 +149,10 @@
   100% { transform: translate(1%, -1%) rotate(0.5deg); }
 }
 
-/* --- Floating Blob Animations --- */
+/* ============================================
+   Floating Blob Animations
+   ============================================ */
+
 .blob {
   position: absolute;
   border-radius: 50%;
@@ -46,19 +160,12 @@
   opacity: 0.4;
   pointer-events: none;
   will-change: transform;
+  transition: background 0.5s ease;
 }
 
-.blob-green {
-  background: radial-gradient(circle, rgba(37, 211, 102, 0.3), transparent 70%);
-}
-
-.blob-purple {
-  background: radial-gradient(circle, rgba(99, 102, 241, 0.2), transparent 70%);
-}
-
-.blob-blue {
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.15), transparent 70%);
-}
+.blob-green { background: radial-gradient(circle, var(--blob-green), transparent 70%); }
+.blob-purple { background: radial-gradient(circle, var(--blob-purple), transparent 70%); }
+.blob-blue { background: radial-gradient(circle, var(--blob-blue), transparent 70%); }
 
 .blob-1 {
   width: 500px;
@@ -104,7 +211,10 @@
   66% { transform: translate(-35px, 15px) scale(0.96); }
 }
 
-/* --- Section Glow Effects --- */
+/* ============================================
+   Section Glow Effects
+   ============================================ */
+
 .section-glow {
   position: relative;
 }
@@ -117,10 +227,11 @@
   transform: translate(-50%, -50%);
   width: 600px;
   height: 400px;
-  background: radial-gradient(ellipse, rgba(37, 211, 102, 0.05), transparent 70%);
+  background: radial-gradient(ellipse, var(--glow-section), transparent 70%);
   pointer-events: none;
   z-index: 0;
   filter: blur(40px);
+  transition: background 0.5s ease;
 }
 
 .section-glow > * {
@@ -128,7 +239,10 @@
   z-index: 1;
 }
 
-/* --- Scroll Reveal Animations --- */
+/* ============================================
+   Scroll Reveal Animations
+   ============================================ */
+
 .reveal {
   opacity: 0;
   transform: translateY(30px);
@@ -178,15 +292,23 @@
   transform: scale(1);
 }
 
-/* --- Hero Parallax --- */
+/* ============================================
+   Hero Parallax
+   ============================================ */
+
 .hero-content {
   transition: transform 0.1s linear;
 }
 
-/* --- Card Hover Glow --- */
+/* ============================================
+   Card Hover Glow
+   ============================================ */
+
 .glow-card {
   position: relative;
   transition: all 0.3s ease;
+  background: var(--bg-glass);
+  border-color: var(--border-light);
 }
 
 .glow-card::before {
@@ -209,10 +331,16 @@
   box-shadow: 0 8px 32px rgba(37, 211, 102, 0.1), 0 0 0 1px rgba(37, 211, 102, 0.1);
 }
 
-/* --- Stat Card Pulse --- */
+/* ============================================
+   Stat Card
+   ============================================ */
+
 .stat-card {
   position: relative;
   overflow: hidden;
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  transition: background 0.5s ease, border-color 0.5s ease;
 }
 
 .stat-card::before {
@@ -231,11 +359,20 @@
   opacity: 1;
 }
 
-/* --- Agent Pill Hover Glow --- */
+/* ============================================
+   Agent Pill
+   ============================================ */
+
 .agent-pill {
   position: relative;
   overflow: hidden;
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  transition: background 0.5s ease, border-color 0.5s ease;
 }
+
+.agent-pill .name { color: var(--text-primary); }
+.agent-pill .desc { color: var(--text-muted); }
 
 .agent-pill::after {
   content: '';
@@ -251,7 +388,10 @@
   opacity: 1;
 }
 
-/* --- Terminal Glow --- */
+/* ============================================
+   Terminal
+   ============================================ */
+
 .terminal {
   position: relative;
 }
@@ -271,7 +411,10 @@
   opacity: 1;
 }
 
-/* --- Video Container Glow --- */
+/* ============================================
+   Video Container Glow
+   ============================================ */
+
 .video-glow {
   position: relative;
 }
@@ -292,10 +435,16 @@
   opacity: 1;
 }
 
-/* --- Architecture Flow Glow --- */
+/* ============================================
+   Architecture Flow
+   ============================================ */
+
 .arch-node {
   position: relative;
-  transition: all 0.3s ease;
+  background: var(--bg-card);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+  transition: all 0.3s ease, background 0.5s ease, border-color 0.5s ease;
 }
 
 .arch-node:hover {
@@ -304,7 +453,20 @@
   transform: translateY(-2px);
 }
 
-/* --- CTA Button Glow --- */
+.arch-arrow {
+  background: var(--arch-arrow);
+  transition: background 0.5s ease;
+}
+
+.arch-arrow::after {
+  border-left-color: var(--arch-arrow);
+  transition: border-left-color 0.5s ease;
+}
+
+/* ============================================
+   CTA Button Glow
+   ============================================ */
+
 .cta-glow {
   position: relative;
   overflow: hidden;
@@ -327,7 +489,10 @@
   transform: translate(-50%, -50%) scale(1);
 }
 
-/* --- Noise Overlay --- */
+/* ============================================
+   Noise Overlay
+   ============================================ */
+
 .noise-overlay {
   position: fixed;
   top: 0;
@@ -336,84 +501,36 @@
   height: 100%;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.015;
+  opacity: var(--noise-opacity);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 256px 256px;
+  transition: opacity 0.5s ease;
 }
 
-/* --- Dark Mode --- */
-@media (prefers-color-scheme: dark) {
-  body {
-    background: #09090b;
-    color: #e4e4e7;
-  }
+/* ============================================
+   Section Eyebrow
+   ============================================ */
 
-  .mesh-bg::before {
-    background:
-      radial-gradient(ellipse 600px 500px at 20% 30%, rgba(37, 211, 102, 0.15), transparent 60%),
-      radial-gradient(ellipse 500px 400px at 80% 20%, rgba(99, 102, 241, 0.12), transparent 55%),
-      radial-gradient(ellipse 400px 500px at 60% 80%, rgba(37, 211, 102, 0.08), transparent 50%);
-  }
-
-  .blob-green {
-    background: radial-gradient(circle, rgba(37, 211, 102, 0.25), transparent 70%);
-  }
-
-  .blob-purple {
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.2), transparent 70%);
-  }
-
-  .blob-blue {
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.15), transparent 70%);
-  }
-
-  .section-glow::after {
-    background: radial-gradient(ellipse, rgba(37, 211, 102, 0.06), transparent 70%);
-  }
-
-  .stat-card {
-    background: #18181b;
-    border-color: #27272a;
-  }
-
-  .agent-pill {
-    background: #18181b;
-    border-color: #27272a;
-  }
-
-  .agent-pill .name { color: #e4e4e7; }
-  .agent-pill .desc { color: #71717a; }
-
-  .glass-card {
-    background: rgba(24, 24, 27, 0.7);
-    border-color: rgba(39, 39, 42, 0.8);
-  }
-
-  .arch-node {
-    background: #18181b;
-    border-color: #27272a;
-    color: #e4e4e7;
-  }
-
-  .arch-arrow {
-    background: #3f3f46;
-  }
-
-  .arch-arrow::after {
-    border-left-color: #3f3f46;
-  }
-
-  .section-eyebrow {
-    color: #25D366;
-  }
-
-  .noise-overlay {
-    opacity: 0.03;
-  }
+.section-eyebrow {
+  color: var(--accent);
+  transition: color 0.5s ease;
 }
 
-/* --- Reduced Motion --- */
+/* ============================================
+   Glass Card
+   ============================================ */
+
+.glass-card {
+  background: var(--bg-glass);
+  border-color: var(--border-light);
+  transition: background 0.5s ease, border-color 0.5s ease;
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
 @media (prefers-reduced-motion: reduce) {
   .mesh-bg::before,
   .blob,
@@ -428,7 +545,10 @@
   }
 }
 
-/* --- Responsive --- */
+/* ============================================
+   Responsive
+   ============================================ */
+
 @media (max-width: 768px) {
   .blob-1 { width: 300px; height: 300px; }
   .blob-2 { width: 250px; height: 250px; }

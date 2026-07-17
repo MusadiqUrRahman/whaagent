@@ -1,10 +1,35 @@
 /* ============================================
    whaagent Landing — Scripts
-   Scroll animations, parallax, header effects
+   Theme toggle, auto-switch, scroll animations
    ============================================ */
 
 (function () {
   'use strict';
+
+  // --- Theme System ---
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('theme-toggle');
+
+  // Set initial dark theme
+  html.setAttribute('data-theme', 'dark');
+
+  // Theme toggle handler
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function () {
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('whaagent-theme', next);
+    });
+  }
+
+  // Auto-switch from dark to light after 3 seconds
+  setTimeout(function () {
+    const savedTheme = localStorage.getItem('whaagent-theme');
+    if (!savedTheme) {
+      html.setAttribute('data-theme', 'light');
+    }
+  }, 3000);
 
   // --- Scroll Reveal ---
   const revealObserver = new IntersectionObserver(
@@ -31,32 +56,16 @@
       () => {
         const scrollY = window.scrollY;
         if (scrollY > 20) {
-          header.style.borderBottomColor = 'var(--border)';
-          header.style.background = 'rgba(250,250,250,0.92)';
+          header.style.borderBottomColor = 'var(--nav-border)';
+          header.style.background = 'var(--nav-bg)';
         } else {
-          header.style.borderBottomColor = 'rgba(228,228,231,0.3)';
-          header.style.background = 'rgba(250,250,250,0.8)';
+          header.style.borderBottomColor = 'transparent';
+          header.style.background = 'var(--nav-bg)';
         }
         lastScroll = scrollY;
       },
       { passive: true }
     );
-
-    // Dark mode header
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      window.addEventListener(
-        'scroll',
-        () => {
-          const scrollY = window.scrollY;
-          if (scrollY > 20) {
-            header.style.background = 'rgba(9,9,11,0.92)';
-          } else {
-            header.style.background = 'rgba(9,9,11,0.8)';
-          }
-        },
-        { passive: true }
-      );
-    }
   }
 
   // --- Hero Parallax ---
