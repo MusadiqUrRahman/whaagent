@@ -6,11 +6,6 @@
 (function () {
   'use strict';
 
-  // --- Auto-switch from dark to light after 10 seconds ---
-  setTimeout(function () {
-    document.documentElement.classList.add('light-mode');
-  }, 10000);
-
   // --- Scroll Reveal ---
   const revealObserver = new IntersectionObserver(
     (entries) => {
@@ -36,17 +31,12 @@
       () => {
         const scrollY = window.scrollY;
         if (scrollY > 20) {
-          header.style.borderBottomColor = '#27272a';
-          header.style.background = 'rgba(9,9,11,0.92)';
+          header.style.borderBottomColor = 'var(--border)';
+          header.style.background = 'rgba(250,250,250,0.92)';
         } else {
-          header.style.borderBottomColor = 'rgba(39,39,42,0.5)';
-          header.style.background = 'rgba(9,9,11,0.8)';
+          header.style.borderBottomColor = 'rgba(228,228,231,0.3)';
+          header.style.background = 'rgba(250,250,250,0.8)';
         }
-        lastScroll = scrollY;
-      },
-      { passive: true }
-    );
-  }
         lastScroll = scrollY;
       },
       { passive: true }
