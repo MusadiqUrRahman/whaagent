@@ -2,6 +2,8 @@
 
 # WhaAgent
 
+<!-- commitagent: 2026-07-20T14:50:50.400Z -->
+
 **Multi-tenant WhatsApp AI platform**
 
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
