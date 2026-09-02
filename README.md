@@ -2,7 +2,7 @@
 
 # WhaAgent
 
-<!-- commitagent: 2026-08-01T08:40:03.940Z -->
+<!-- commitagent: 2026-09-02T18:12:15.050Z -->
 
 **Multi-tenant WhatsApp AI platform**
 
